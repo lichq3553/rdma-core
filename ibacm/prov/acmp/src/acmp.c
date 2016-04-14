@@ -951,18 +951,23 @@ acmp_resolve_response(uint64_t id, struct acm_msg *req_msg,
 	msg.hdr.length = ACM_MSG_HDR_LENGTH;
 	memset(msg.hdr.data, 0, sizeof(msg.hdr.data));
 
-	if (status == ACM_STATUS_SUCCESS) {
-		msg.hdr.length += ACM_MSG_EP_LENGTH;
-		msg.resolve_data[0].flags = IBV_PATH_FLAG_GMP |
-			IBV_PATH_FLAG_PRIMARY | IBV_PATH_FLAG_BIDIRECTIONAL;
-		msg.resolve_data[0].type = ACM_EP_INFO_PATH;
-		msg.resolve_data[0].info.path = dest->path;
 
-		if (req_msg->hdr.src_out) {
+	if (status == ACM_STATUS_SUCCESS) {
+		if ((msg.hdr.opcode & ACM_OP_MASK) == ACM_OP_IP_RESOLVE) {
+			memcpy(msg.data, &dest->path.dgid, sizeof(union ibv_gid));
+		} else {
 			msg.hdr.length += ACM_MSG_EP_LENGTH;
-			memcpy(&msg.resolve_data[1],
-				&req_msg->resolve_data[req_msg->hdr.src_index],
-				ACM_MSG_EP_LENGTH);
+			msg.resolve_data[0].flags = IBV_PATH_FLAG_GMP |
+				IBV_PATH_FLAG_PRIMARY | IBV_PATH_FLAG_BIDIRECTIONAL;
+			msg.resolve_data[0].type = ACM_EP_INFO_PATH;
+			msg.resolve_data[0].info.path = dest->path;
+
+			if (req_msg->hdr.src_out) {
+				msg.hdr.length += ACM_MSG_EP_LENGTH;
+				memcpy(&msg.resolve_data[1],
+				       &req_msg->resolve_data[req_msg->hdr.src_index],
+				       ACM_MSG_EP_LENGTH);
+			}
 		}
 	}
 
@@ -1856,6 +1861,10 @@ test:
 		status = ACM_STATUS_SUCCESS;
 		break;
 	case ACMP_ADDR_RESOLVED:
+		if ((msg->hdr.opcode & ACM_OP_MASK) == ACM_OP_IP_RESOLVE) {
+			status = ACM_STATUS_SUCCESS;
+			break;
+		}
 		acm_log(2, "have address, resolving route\n");
 		acm_increment_counter(ACM_CNTR_ADDR_CACHE);
 		atomic_inc(&ep->counters[ACM_CNTR_ADDR_CACHE]);
