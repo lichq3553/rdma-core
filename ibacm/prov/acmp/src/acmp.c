@@ -1749,11 +1749,12 @@ static int acmp_dest_timeout(struct acmp_dest *dest)
 {
 	uint64_t timestamp = time_stamp_min();
 
-	if (timestamp > dest->addr_timeout) {
+	if (timestamp >= dest->addr_timeout) {
 		acm_log(2, "%s address timed out\n", dest->name);
 		dest->state = ACMP_INIT;
 		return 1;
-	} else if (timestamp > dest->route_timeout) {
+	} else if (timestamp >= dest->route_timeout) {
+		dest->path.dlid = 0;
 		acm_log(2, "%s route timed out\n", dest->name);
 		dest->state = ACMP_ADDR_RESOLVED;
 		return 1;
