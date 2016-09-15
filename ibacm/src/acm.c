@@ -2801,6 +2801,7 @@ static void acm_event_handler(struct acmc_device *dev)
 			acm_port_down(&dev->port[i]);
 		break;
 	case IBV_EVENT_CLIENT_REREGISTER:
+		acm_port_change(&dev->port[i]);
 		if ((dev->port[i].state == IBV_PORT_ACTIVE) &&
 		    dev->port[i].prov_port_context) {
 			dev->port[i].prov->handle_event(dev->port[i].prov_port_context,
