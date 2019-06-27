@@ -213,6 +213,16 @@ struct mlx5dv_crypto_caps {
 	uint32_t flags; /* use enum mlx5dv_crypto_caps_flags */
 };
 
+struct mlx5dv_devx_port {
+	uint64_t comp_mask;
+	uint16_t vport_num;
+	uint16_t vport_vhca_id;
+	uint16_t esw_owner_vhca_id;
+	uint64_t icm_addr_rx;
+	uint64_t icm_addr_tx;
+	struct mlx5dv_reg reg_c_0;
+};
+
 /*
  * Direct verbs device-specific attributes
  */

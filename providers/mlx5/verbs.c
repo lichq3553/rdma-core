@@ -5308,6 +5308,58 @@ int mlx5dv_destroy_flow_matcher(struct mlx5dv_flow_matcher *flow_matcher)
 	return dvops->destroy_flow_matcher(flow_matcher);
 }
 
+static int _mlx5dv_query_devx_port(struct ibv_context *ctx,
+			   uint32_t port_num,
+			   struct mlx5dv_devx_port *mlx5_devx_port)
+{
+	DECLARE_COMMAND_BUFFER(cmd,
+			MLX5_IB_OBJECT_DEVX,
+			MLX5_IB_METHOD_DEVX_QUERY_PORT,
+			8);
+
+	if (!mlx5dv_is_supported(ctx->device)) {
+		errno = EOPNOTSUPP;
+		return EOPNOTSUPP;
+	}
+
+	fill_attr_in_uint32(cmd, MLX5_IB_ATTR_DEVX_QUERY_PORT_NUM, port_num);
+	fill_attr_out(cmd, MLX5_IB_ATTR_DEVX_QUERY_PORT_COMP_MASK,
+		      &mlx5_devx_port->comp_mask,
+		      sizeof(mlx5_devx_port->comp_mask));
+
+	if (mlx5_devx_port->comp_mask & MLX5DV_DEVX_PORT_VPORT)
+		fill_attr_out(cmd, MLX5_IB_ATTR_DEVX_QUERY_PORT_VPORT,
+			      &mlx5_devx_port->vport_num,
+			      sizeof(mlx5_devx_port->vport_num));
+
+	if (mlx5_devx_port->comp_mask & MLX5DV_DEVX_PORT_VPORT_VHCA_ID)
+		fill_attr_out(cmd, MLX5_IB_ATTR_DEVX_QUERY_PORT_VPORT_VHCA_ID,
+			      &mlx5_devx_port->vport_vhca_id,
+			      sizeof(mlx5_devx_port->vport_vhca_id));
+
+	if (mlx5_devx_port->comp_mask & MLX5DV_DEVX_PORT_ESW_OWNER_VHCA_ID)
+		fill_attr_out(cmd, MLX5_IB_ATTR_DEVX_QUERY_PORT_ESW_OWNER_VHCA_ID,
+			      &mlx5_devx_port->esw_owner_vhca_id,
+			      sizeof(mlx5_devx_port->esw_owner_vhca_id));
+
+	if (mlx5_devx_port->comp_mask & MLX5DV_DEVX_PORT_VPORT_ICM_RX)
+		fill_attr_out(cmd, MLX5_IB_ATTR_DEVX_QUERY_PORT_VPORT_ICM_RX,
+			      &mlx5_devx_port->icm_addr_rx,
+			      sizeof(mlx5_devx_port->icm_addr_rx));
+
+	if (mlx5_devx_port->comp_mask & MLX5DV_DEVX_PORT_VPORT_ICM_TX)
+		fill_attr_out(cmd, MLX5_IB_ATTR_DEVX_QUERY_PORT_VPORT_ICM_TX,
+			      &mlx5_devx_port->icm_addr_tx,
+			      sizeof(mlx5_devx_port->icm_addr_tx));
+
+	if (mlx5_devx_port->comp_mask & MLX5DV_DEVX_PORT_MATCH_REG_C_0)
+		fill_attr_out(cmd, MLX5_IB_ATTR_DEVX_QUERY_PORT_MATCH_REG_C_0,
+			      &mlx5_devx_port->reg_c_0,
+			      sizeof(mlx5_devx_port->reg_c_0));
+
+	return execute_ioctl(ctx, cmd);
+}
+
 #define CREATE_FLOW_MAX_FLOW_ACTIONS_SUPPORTED 8
 struct ibv_flow *
 _mlx5dv_create_flow(struct mlx5dv_flow_matcher *flow_matcher,
