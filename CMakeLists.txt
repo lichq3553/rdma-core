@@ -172,6 +172,10 @@ set(DISTRO_FLAVOUR "None" CACHE
   STRING "Flavour of distribution to install for. This primarily impacts the init.d scripts installed.")
 
 #-------------------------
+# Add MLNX OFED compat headers to build against old kernels
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/mlnx-compat-includes" "${BUILD_INCLUDE}")
+
+#-------------------------
 # Load CMake components
 set(BUILDLIB "${PROJECT_SOURCE_DIR}/buildlib")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${BUILDLIB}")
