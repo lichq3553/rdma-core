@@ -1,3 +1,9 @@
+rdma-core (2404mlnx51-1) unstable; urgency=low
+
+  * New MLNX_OFED version.
+
+ -- Mohammad Kabat <mohammadkab@nvidia.com>  Sun, 18 Jan 2024 12:08:33 +0200
+
 rdma-core (51.0-1) unstable; urgency=medium
 
   * New upstream release.
