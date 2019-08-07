@@ -480,7 +480,6 @@ if "%{WITH_SYSTEMD}" == "1"
 %{_udevrulesdir}/../rdma_rename
 %{_udevrulesdir}/60-rdma-ndd.rules
 %{_udevrulesdir}/60-rdma-persistent-naming.rules
-%config(noreplace) %{_sysconfdir}/modprobe.d/ofed_mlx4.conf
 %{_udevrulesdir}/75-rdma-description.rules
 %{_udevrulesdir}/90-rdma-hw-modules.rules
 %{_udevrulesdir}/90-rdma-ulp-modules.rules
