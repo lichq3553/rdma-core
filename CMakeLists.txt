@@ -223,9 +223,9 @@ set(CYTHON_EXECUTABLE "")
 if (${CMAKE_VERSION} VERSION_LESS "3.12")
   # Look for Python. We prefer some variant of python 3 if the system has it
   FIND_PACKAGE(PythonInterp 3 QUIET)
-  if (PythonInterp_FOUND)
+  if (${PythonInterp_FOUND})
     # pyverbs can only use python3:
-    if (NOT NO_PYVERBS)
+    if (NOT ${NO_PYVERBS})
       FIND_PACKAGE(cython)
     endif()
   else()
