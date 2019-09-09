@@ -8,6 +8,8 @@
 # build_docs: disabled by default
 %bcond_with build_docs
 
+%define rst2man_exist %(test -f /usr/bin/rst2man; echo $?)
+
 Name: rdma-core
 Version: 2404mlnx51
 Release: 1%{?dist}
@@ -575,68 +577,71 @@ if "%{WITH_SYSTEMD}" == "1"
 
 %files -n infiniband-diags
 %{_sbindir}/ibaddr
-%{_mandir}/man8/ibaddr*
 %{_sbindir}/ibnetdiscover
-%{_mandir}/man8/ibnetdiscover*
 %{_sbindir}/ibping
-%{_mandir}/man8/ibping*
 %{_sbindir}/ibportstate
-%{_mandir}/man8/ibportstate*
 %{_sbindir}/ibroute
-%{_mandir}/man8/ibroute.*
 %{_sbindir}/ibstat
-%{_mandir}/man8/ibstat.*
 %{_sbindir}/ibsysstat
-%{_mandir}/man8/ibsysstat*
 %{_sbindir}/ibtracert
-%{_mandir}/man8/ibtracert*
 %{_sbindir}/perfquery
-%{_mandir}/man8/perfquery*
 %{_sbindir}/sminfo
-%{_mandir}/man8/sminfo*
 %{_sbindir}/smpdump
-%{_mandir}/man8/smpdump*
 %{_sbindir}/smpquery
-%{_mandir}/man8/smpquery*
 %{_sbindir}/saquery
-%{_mandir}/man8/saquery*
 %{_sbindir}/vendstat
-%{_mandir}/man8/vendstat*
 %{_sbindir}/iblinkinfo
-%{_mandir}/man8/iblinkinfo*
 %{_sbindir}/ibqueryerrors
-%{_mandir}/man8/ibqueryerrors*
 %{_sbindir}/ibcacheedit
-%{_mandir}/man8/ibcacheedit*
 %{_sbindir}/ibccquery
-%{_mandir}/man8/ibccquery*
 %{_sbindir}/ibccconfig
-%{_mandir}/man8/ibccconfig*
 %{_sbindir}/dump_fts
-%{_mandir}/man8/dump_fts*
 %{_sbindir}/ibhosts
-%{_mandir}/man8/ibhosts*
 %{_sbindir}/ibswitches
-%{_mandir}/man8/ibswitches*
 %{_sbindir}/ibnodes
-%{_mandir}/man8/ibnodes*
 %{_sbindir}/ibrouters
-%{_mandir}/man8/ibrouters*
 %{_sbindir}/ibfindnodesusing.pl
-%{_mandir}/man8/ibfindnodesusing*
 %{_sbindir}/ibidsverify.pl
-%{_mandir}/man8/ibidsverify*
 %{_sbindir}/check_lft_balance.pl
-%{_mandir}/man8/check_lft_balance*
 %{_sbindir}/dump_lfts.sh
 %{_mandir}/man8/dump_lfts*
 %{_sbindir}/dump_mfts.sh
 %{_mandir}/man8/dump_mfts*
 %{_sbindir}/ibstatus
-%{_mandir}/man8/ibstatus*
-%{_mandir}/man8/infiniband-diags*
 %{_libdir}/libibmad*.so.*
 %{_libdir}/libibnetdisc*.so.*
+%if %{rst2man_exist} == 0
+%{_mandir}/man8/infiniband-diags*
+%{_mandir}/man8/ibstatus*
+%{_mandir}/man8/check_lft_balance*
+%{_mandir}/man8/ibidsverify*
+%{_mandir}/man8/ibfindnodesusing*
+%{_mandir}/man8/ibrouters*
+%{_mandir}/man8/ibnodes*
+%{_mandir}/man8/ibnodes*
+%{_mandir}/man8/ibswitches*
+%{_mandir}/man8/ibhosts*
+%{_mandir}/man8/dump_fts*
+%{_mandir}/man8/ibping*
+%{_mandir}/man8/ibportstate*
+%{_mandir}/man8/ibroute.*
+%{_mandir}/man8/ibstat.*
+%{_mandir}/man8/ibsysstat*
+%{_mandir}/man8/ibtracert*
+%{_mandir}/man8/perfquery*
+%{_mandir}/man8/sminfo*
+%{_mandir}/man8/smpdump*
+%{_mandir}/man8/smpquery*
+%{_mandir}/man8/saquery*
+%{_mandir}/man8/vendstat*
+%{_mandir}/man8/iblinkinfo*
+%{_mandir}/man8/ibqueryerrors*
+%{_mandir}/man8/ibcacheedit*
+%{_mandir}/man8/ibccquery*
+%{_mandir}/man8/ibccconfig*
+%{_mandir}/man8/ibaddr*
+%{_mandir}/man8/ibnetdiscover*
+%endif
 %{perl_vendorlib}/IBswcountlimits.pm
 %config(noreplace) %{_sysconfdir}/infiniband-diags/error_thresholds
 %config(noreplace) %{_sysconfdir}/infiniband-diags/ibdiag.conf
