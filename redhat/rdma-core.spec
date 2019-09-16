@@ -8,6 +8,9 @@
 # build_docs: disabled by default
 %bcond_with build_docs
 
+# valgrind support: disabled by default; use "--with valgrind" to enable
+%bcond_with valgrind
+
 %define rst2man_exist %(test -f /usr/bin/rst2man; echo $?)
 
 Name: rdma-core
@@ -40,7 +43,9 @@ BuildRequires: pkgconfig(libnl-route-3.0)
 %if %{with build_docs}
 BuildRequires: /usr/bin/rst2man
 %endif
+%if %{with valgrind}
 BuildRequires: valgrind-devel
+%endif
 %if 0%{?fedora} < 37
 BuildRequires: systemd
 %endif
