@@ -13,6 +13,11 @@
 
 %define rst2man_exist %(test -f /usr/bin/rst2man; echo $?)
 
+%define python38_exist %(test -f /usr/bin/python3.8; echo $?)
+%if 0%{?bclinux} == 8 && %{python38_exist} == 0
+%define __python3 /usr/bin/python3.8
+%endif
+
 Name: rdma-core
 Version: 2404mlnx51
 Release: 1%{?dist}
@@ -34,7 +39,6 @@ BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 ExcludeArch: %{arm}
 
 BuildRequires: binutils
-BuildRequires: cmake >= 2.8.11
 BuildRequires: gcc
 BuildRequires: libudev-devel
 BuildRequires: pkgconfig
@@ -56,8 +60,21 @@ BuildRequires: systemd-devel
 %define with_pyverbs %{?_with_pyverbs: 1} %{?!_with_pyverbs: 0}
 %endif
 %if %{with_pyverbs}
+%if 0%{?rhel} == 7
+BuildRequires: python36-devel
+BuildRequires: python36-Cython
+BuildRequires: cmake3
+%global cmake %cmake3
+%else
+BuildRequires: cmake >= 2.8.11
+%if 0%{?bclinux} == 8 && %{python38_exist} == 0
+BuildRequires: python38-devel
+BuildRequires: python38-Cython
+%else
 BuildRequires: python3-devel
 BuildRequires: python3-Cython
+%endif
+%endif
 %else
 %if 0%{?rhel} >= 8 || 0%{?fedora} >= 30
 BuildRequires: python3
