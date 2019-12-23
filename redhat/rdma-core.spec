@@ -420,6 +420,9 @@ easy, object-oriented access to IB verbs.
 
 %install
 %cmake_install
+mkdir installed_docs
+mv %{buildroot}%{_docdir}/%{name}/* installed_docs/
+rm -rf %{buildroot}%{_docdir}/%{name}-%{version}
 
 mkdir -p %{buildroot}/%{_sysconfdir}/rdma
 
@@ -499,12 +502,10 @@ fi
 
 %files
 %dir %{_sysconfdir}/rdma
-%dir %{_docdir}/%{name}
-%doc %{_docdir}/%{name}/70-persistent-ipoib.rules
-%doc %{_docdir}/%{name}/README.md
-%doc %{_docdir}/%{name}/rxe.md
-%doc %{_docdir}/%{name}/udev.md
-%doc %{_docdir}/%{name}/tag_matching.md
+%doc installed_docs/README.md
+%doc installed_docs/udev.md
+%doc installed_docs/tag_matching.md
+%doc installed_docs/70-persistent-ipoib.rules
 %config(noreplace) %{_sysconfdir}/rdma/mlx4.conf
 %config(noreplace) %{_sysconfdir}/rdma/modules/rdma.conf
 %if 0
@@ -536,7 +537,7 @@ fi
 %license COPYING.*
 
 %files devel
-%doc %{_docdir}/%{name}/MAINTAINERS
+%doc installed_docs/MAINTAINERS
 %dir %{_includedir}/infiniband
 %dir %{_includedir}/rdma
 %{_includedir}/infiniband/*
@@ -680,7 +681,7 @@ fi
 %{_libdir}/libmlx5.so.*
 %endif
 %config(noreplace) %{_sysconfdir}/libibverbs.d/*.driver
-%doc %{_docdir}/%{name}/libibverbs.md
+%doc installed_docs/libibverbs.md
 
 %files -n libibverbs-utils
 %{_bindir}/ibv_*
@@ -698,7 +699,7 @@ fi
 %{_unitdir}/ibacm.socket
 %dir %{_libdir}/ibacm
 %{_libdir}/ibacm/*
-%doc %{_docdir}/%{name}/ibacm.md
+%doc installed_docs/ibacm.md
 
 %if 0
 %files -n iwpmd
@@ -718,7 +719,7 @@ fi
 %{_libdir}/librdmacm*.so.*
 %dir %{_libdir}/rsocket
 %{_libdir}/rsocket/*.so*
-%doc %{_docdir}/%{name}/librdmacm.md
+%doc installed_docs/librdmacm.md
 %{_mandir}/man7/rsocket.*
 
 %files -n librdmacm-utils
@@ -768,10 +769,10 @@ fi
 %{_mandir}/man5/srp_daemon_port@.service.5*
 %{_mandir}/man8/ibsrpdm.8*
 %{_mandir}/man8/srp_daemon.8*
-%doc %{_docdir}/%{name}/ibsrpdm.md
+%doc installed_docs/ibsrpdm.md
 
 %if %{with_pyverbs}
 %files -n python3-pyverbs
 %{python3_sitearch}/pyverbs
-%{_docdir}/%{name}/tests/*.py
+%doc installed_docs/tests
 %endif
