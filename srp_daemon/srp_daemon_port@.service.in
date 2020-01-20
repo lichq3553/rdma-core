@@ -24,15 +24,15 @@ BindsTo=srp_daemon.service
 [Service]
 Type=simple
 ExecStart=@CMAKE_INSTALL_FULL_SBINDIR@/srp_daemon --systemd -e -c -n -j %I -R 60
-MemoryDenyWriteExecute=yes
+@SRP_DISABLE_PARAM@MemoryDenyWriteExecute=yes
 PrivateNetwork=yes
 PrivateTmp=yes
-ProtectControlGroups=yes
+@SRP_DISABLE_PARAM@ProtectControlGroups=yes
 ProtectHome=yes
-ProtectKernelModules=yes
+@SRP_DISABLE_PARAM@ProtectKernelModules=yes
 ProtectSystem=full
-RestrictRealtime=yes
-SystemCallFilter=~@clock @cpu-emulation @debug @keyring @module @mount @obsolete @raw-io
+@SRP_DISABLE_PARAM@RestrictRealtime=yes
+@SRP_DISABLE_PARAM@SystemCallFilter=~@clock @cpu-emulation @debug @keyring @module @mount @obsolete @raw-io
 
 [Install]
 # Instances of this template unit file is started automatically by udev or by

@@ -11,6 +11,13 @@
 # valgrind support: disabled by default; use "--with valgrind" to enable
 %bcond_with valgrind
 
+%if %{?rhel:%{rhel} < 8}%{?!rhel:0}
+%global with_srp_compat 1
+%endif
+%if %{?suse_version:%{suse_version} < 1500}%{?!suse_version:0}
+%global with_srp_compat 1
+%endif
+
 %define rst2man_exist %(test -f /usr/bin/rst2man; echo $?)
 
 %define python38_exist %(test -f /usr/bin/python3.8; echo $?)
@@ -400,6 +407,9 @@ easy, object-oriented access to IB verbs.
 %if %{defined __python3}
          -DPYTHON_EXECUTABLE:PATH=%{__python3} \
          -DCMAKE_INSTALL_PYTHON_ARCH_LIB:PATH=%{python3_sitearch} \
+%endif
+%if %{with srp_compat}
+         -DENABLE_SRP_COMPAT=1 \
 %endif
 %if %{with_pyverbs}
          -DNO_PYVERBS=0

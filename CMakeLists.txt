@@ -54,6 +54,9 @@
 #      directory are available.
 #   -DENABLE_LTTNG (default, no tracing support)
 #      Enable LTTng tracing.
+#   -DENABLE_SRP_COMPAT=1 (default disabled)
+#      Avoid using modern parameters in the systemd unit files to keep
+#      compatibility with old systemd versions.
 
 if (${CMAKE_VERSION} VERSION_LESS "3.18.1")
 	# Centos 7 support
