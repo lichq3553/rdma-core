@@ -1,7 +1,15 @@
+%{!?cmake: %global cmake cmake}
+%{!?_udevrulesdir: %global _udevrulesdir /etc/udev/rules.d}
+
+# if systemd not supported, do not install the systemd service files
+%{!?_unitdir: %global _unitdir NA}
+%global WITH_SYSTEMD %(if ( test -d "%{_unitdir}" > /dev/null);then echo -n '1'; else echo -n '0'; fi)
+
 Name: rdma-core
-Version: 51.0
+Version: 2404mlnx51
 Release: 1%{?dist}
 Summary: RDMA core userspace libraries and daemons
+Group: System Environment/Libraries
 
 # Almost everything is licensed under the OFA dual GPLv2, 2 Clause BSD license
 #  providers/ipathverbs/ Dual licensed using a BSD license with an extra patent clause
@@ -12,6 +20,7 @@ Url: https://github.com/linux-rdma/rdma-core
 Source: rdma-core-%{version}.tar.gz
 # OFED: Build static libs by default.
 %define with_static %{?_without_static: 0} %{?!_without_static: 1}
+BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 # 32-bit arm is missing required arch-specific memory barriers,
 ExcludeArch: %{arm}
@@ -60,10 +69,21 @@ Requires: pciutils
 # package called 'rdma', which we're supplanting here.
 Provides: rdma = %{version}-%{release}
 Obsoletes: rdma < %{version}-%{release}
+Provides: rdma-ndd = %{version}-%{release}
+Obsoletes: rdma-ndd < %{version}-%{release}
+# the ndd utility moved from infiniband-diags to rdma-core
 Conflicts: infiniband-diags <= 1.6.7
+Requires: pciutils
+# 32-bit arm is missing required arch-specific memory barriers,
+ExcludeArch: %{arm}
 
-# Since we recommend developers use Ninja, so should packagers, for consistency.
 %define CMAKE_FLAGS %{nil}
+%if 0%{?suse_version}
+# Tumbleweed's cmake RPM macro adds -Wl,--no-undefined to the module flags
+# which is totally inappropriate and breaks building 'ENABLE_EXPORTS' style
+# module libraries (eg ibacmp).
+%define CMAKE_FLAGS -DCMAKE_MODULE_LINKER_FLAGS=""
+%endif
 %if 0%{?fedora} >= 23 || 0%{?rhel} >= 8
 # Ninja was introduced in FC23
 BuildRequires: ninja-build
@@ -94,15 +114,22 @@ scripts, dracut rules, and the rdma-ndd utility.
 
 %package devel
 Summary: RDMA core development libraries and headers
+Group: System Environment/Libraries
 Requires: libibverbs%{?_isa} = %{version}-%{release}
 Provides: libibverbs-devel = %{version}-%{release}
 Obsoletes: libibverbs-devel < %{version}-%{release}
+Provides: libibverbs-devel-static = %{version}-%{release}
+Obsoletes: libibverbs-devel-static < %{version}-%{release}
 Requires: libibumad%{?_isa} = %{version}-%{release}
 Provides: libibumad-devel = %{version}-%{release}
 Obsoletes: libibumad-devel < %{version}-%{release}
+Provides: libibumad-static = %{version}-%{release}
+Obsoletes: libibumad-static < %{version}-%{release}
 Requires: librdmacm%{?_isa} = %{version}-%{release}
 Provides: librdmacm-devel = %{version}-%{release}
 Obsoletes: librdmacm-devel < %{version}-%{release}
+Provides: librdmacm-static = %{version}-%{release}
+Obsoletes: librdmacm-static < %{version}-%{release}
 Provides: ibacm-devel = %{version}-%{release}
 Obsoletes: ibacm-devel < %{version}-%{release}
 Requires: infiniband-diags%{?_isa} = %{version}-%{release}
@@ -117,6 +144,30 @@ Obsoletes: libibmad-devel < %{version}-%{release}
 BuildRequires: pkgconfig(libnl-3.0)
 BuildRequires: pkgconfig(libnl-route-3.0)
 %endif
+Provides: libcxgb3-static = %{version}-%{release}
+Obsoletes: libcxgb3-static < %{version}-%{release}
+Provides: libcxgb4-static = %{version}-%{release}
+Obsoletes: libcxgb4-static < %{version}-%{release}
+Provides: libhfi1-static = %{version}-%{release}
+Obsoletes: libhfi1-static < %{version}-%{release}
+Provides: libipathverbs-static = %{version}-%{release}
+Obsoletes: libipathverbs-static < %{version}-%{release}
+Provides: libmlx4-devel = %{version}-%{release}
+Obsoletes: libmlx4-devel < %{version}-%{release}
+Provides: libmlx4-static = %{version}-%{release}
+Obsoletes: libmlx4-static < %{version}-%{release}
+Provides: libmlx5-devel = %{version}-%{release}
+Obsoletes: libmlx5-devel < %{version}-%{release}
+Provides: libmlx5-static = %{version}-%{release}
+Obsoletes: libmlx5-static < %{version}-%{release}
+Provides: libnes-static = %{version}-%{release}
+Obsoletes: libnes-static < %{version}-%{release}
+Provides: libocrdma-static = %{version}-%{release}
+Obsoletes: libocrdma-static < %{version}-%{release}
+Provides: libi40iw-devel-static = %{version}-%{release}
+Obsoletes: libi40iw-devel-static < %{version}-%{release}
+Provides: libmthca-static = %{version}-%{release}
+Obsoletes: libmthca-static < %{version}-%{release}
 
 %description devel
 RDMA core development libraries and headers.
@@ -148,6 +199,7 @@ compatibility reasons.
 
 %package -n libibverbs
 Summary: A library and drivers for direct userspace use of RDMA (InfiniBand/iWARP/RoCE) hardware
+Group: System Environment/Libraries
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 Provides: libcxgb4 = %{version}-%{release}
@@ -166,8 +218,10 @@ Provides: libmana = %{version}-%{release}
 Obsoletes: libmana < %{version}-%{release}
 Provides: libmlx4 = %{version}-%{release}
 Obsoletes: libmlx4 < %{version}-%{release}
+%ifnarch s390x s390
 Provides: libmlx5 = %{version}-%{release}
 Obsoletes: libmlx5 < %{version}-%{release}
+%endif
 Provides: libmthca = %{version}-%{release}
 Obsoletes: libmthca < %{version}-%{release}
 Provides: libocrdma = %{version}-%{release}
@@ -184,25 +238,16 @@ fast path operations.
 
 Device-specific plug-in ibverbs userspace drivers are included:
 
-- libcxgb4: Chelsio T4 iWARP HCA
-- libefa: Amazon Elastic Fabric Adapter
 - liberdma: Alibaba Elastic RDMA (iWarp) Adapter
-- libhfi1: Intel Omni-Path HFI
-- libhns: HiSilicon Hip06 SoC
-- libipathverbs: QLogic InfiniPath HCA
 - libirdma: Intel Ethernet Connection RDMA
 - libmana: Microsoft Azure Network Adapter
 - libmlx4: Mellanox ConnectX-3 InfiniBand HCA
 - libmlx5: Mellanox Connect-IB/X-4+ InfiniBand HCA
-- libmthca: Mellanox InfiniBand HCA
-- libocrdma: Emulex OneConnect RDMA/RoCE Device
-- libqedr: QLogic QL4xxx RoCE HCA
 - librxe: A software implementation of the RoCE protocol
-- libsiw: A software implementation of the iWarp protocol
-- libvmw_pvrdma: VMware paravirtual RDMA device
 
 %package -n libibverbs-utils
 Summary: Examples for the libibverbs library
+Group: System Environment/Libraries
 Requires: libibverbs%{?_isa} = %{version}-%{release}
 
 %description -n libibverbs-utils
@@ -211,9 +256,12 @@ displays information about RDMA devices.
 
 %package -n ibacm
 Summary: InfiniBand Communication Manager Assistant
+Group: System Environment/Libraries
 Requires(post): systemd-units
 Requires(preun): systemd-units
 Requires(postun): systemd-units
+Requires: libibumad%{?_isa} = %{version}-%{release}
+Requires: libibverbs%{?_isa} = %{version}-%{release}
 
 %description -n ibacm
 The ibacm daemon helps reduce the load of managing path record lookups on
@@ -225,16 +273,6 @@ user applications need not know about this daemon as long as their app
 uses librdmacm to handle connection bring up/tear down.  The librdmacm
 library knows how to talk directly to the ibacm daemon to retrieve data.
 
-%package -n iwpmd
-Summary: iWarp Port Mapper userspace daemon
-Requires(post): systemd-units
-Requires(preun): systemd-units
-Requires(postun): systemd-units
-
-%description -n iwpmd
-iwpmd provides a userspace service for iWarp drivers to claim
-tcp ports through the standard socket interface.
-
 %package -n libibumad
 Summary: OpenFabrics Alliance InfiniBand umad (userspace management datagram) library
 
@@ -245,25 +283,34 @@ are used by the IB diagnostic and management tools, including OpenSM.
 
 %package -n librdmacm
 Summary: Userspace RDMA Connection Manager
+Group: System Environment/Libraries
+Requires: libibverbs%{?_isa} = %{version}-%{release}
 
 %description -n librdmacm
 librdmacm provides a userspace RDMA Communication Management API.
 
 %package -n librdmacm-utils
 Summary: Examples for the librdmacm library
+Group: System Environment/Libraries
 Requires: librdmacm%{?_isa} = %{version}-%{release}
+Requires: libibverbs%{?_isa} = %{version}-%{release}
 
 %description -n librdmacm-utils
 Example test programs for the librdmacm library.
 
 %package -n srp_daemon
 Summary: Tools for using the InfiniBand SRP protocol devices
+Group: System Environment/Libraries
 Obsoletes: srptools <= 1.0.3
 Provides: srptools = %{version}-%{release}
 Obsoletes: openib-srptools <= 0.0.6
+%if "%{WITH_SYSTEMD}" == "1"
 Requires(post): systemd-units
 Requires(preun): systemd-units
 Requires(postun): systemd-units
+%endif
+Requires: libibumad%{?_isa} = %{version}-%{release}
+Requires: libibverbs%{?_isa} = %{version}-%{release}
 
 %description -n srp_daemon
 In conjunction with the kernel ib_srp driver, srp_daemon allows you to
@@ -272,7 +319,7 @@ discover and use SCSI devices via the SCSI RDMA Protocol over InfiniBand.
 %if %{with_pyverbs}
 %package -n python3-pyverbs
 Summary: Python3 API over IB verbs
-%{?python_provide:%python_provide python3-pyverbs}
+%{?python_provide:%python_provide python%{python3_pkgversion}-pyverbs}
 
 %description -n python3-pyverbs
 Pyverbs is a Cython-based Python API over libibverbs, providing an
@@ -290,7 +337,7 @@ easy, object-oriented access to IB verbs.
 %define _rundir /var/run
 %endif
 
-%{!?EXTRA_CMAKE_FLAGS: %define EXTRA_CMAKE_FLAGS %{nil}}
+%{!?EXTRA_CMAKE_FLAGS: %global EXTRA_CMAKE_FLAGS %{nil}}
 
 # Pass all of the rpm paths directly to GNUInstallDirs and our other defines.
 %cmake %{CMAKE_FLAGS} \
@@ -312,6 +359,9 @@ easy, object-oriented access to IB verbs.
          -DCMAKE_INSTALL_UDEV_RULESDIR:PATH=%{_udevrulesdir} \
          -DCMAKE_INSTALL_PERLDIR:PATH=%{perl_vendorlib} \
          -DENABLE_IBDIAGS_COMPAT:BOOL=True \
+%if "%{WITH_SYSTEMD}" == "0"
+         -DWITHOUT_SYSTEMD=1 \
+%endif
 %if %{with_static}
          -DENABLE_STATIC=1 \
 %endif
@@ -344,16 +394,25 @@ install -D -m0755 redhat/rdma.modules-setup.sh %{buildroot}%{dracutlibdir}/modul
 install -D -m0644 redhat/rdma.mlx4.sys.modprobe %{buildroot}%{sysmodprobedir}/libmlx4.conf
 install -D -m0755 redhat/rdma.mlx4-setup.sh %{buildroot}%{_libexecdir}/mlx4-setup.sh
 rm -f %{buildroot}%{_sysconfdir}/rdma/modules/rdma.conf
-install -D -m0644 redhat/rdma.conf %{buildroot}%{_sysconfdir}/rdma/modules/rdma.conf
+install -D -m0644 kernel-boot/modules/rdma.conf %{buildroot}%{_sysconfdir}/rdma/modules/rdma.conf
 
 # ibacm
 (if [ -d %{__cmake_builddir} ]; then cd %{__cmake_builddir}; fi
- ./bin/ib_acme -D . -O &&
+IB_ACME=bin/ib_acme
+[ -e build/bin/ib_acme ] && IB_ACME=build/bin/ib_acme
+LD_LIBRARY_PATH=%{buildroot}%{_libdir} ${IB_ACME} -D . -O
+# multi-lib conflict resolution hacks (bug 1429362)
+sed -i -e 's|%{_libdir}|/usr/lib|' %{buildroot}%{_mandir}/man7/ibacm_prov.7
+sed -i -e 's|%{_libdir}|/usr/lib|' ibacm_opts.cfg
  install -D -m0644 ibacm_opts.cfg %{buildroot}%{_sysconfdir}/rdma/)
 
+[ -d "%{buildroot}%{_prefix}/NA" ] && %{__rm} -rf %{buildroot}%{_prefix}/NA
+
+%if %{WITH_SYSTEMD} == 1
 # Delete the package's init.d scripts
 rm -rf %{buildroot}/%{_initrddir}/
 rm -f %{buildroot}/%{_sbindir}/srp_daemon.sh
+%endif
 
 %post -n rdma-core
 if [ -x /sbin/udevadm ]; then
@@ -381,19 +440,14 @@ fi
 %postun -n ibacm
 %systemd_postun_with_restart ibacm.service
 
+%if "%{WITH_SYSTEMD}" == "1"
 %post -n srp_daemon
 %systemd_post srp_daemon.service
 %preun -n srp_daemon
 %systemd_preun srp_daemon.service
 %postun -n srp_daemon
 %systemd_postun_with_restart srp_daemon.service
-
-%post -n iwpmd
-%systemd_post iwpmd.service
-%preun -n iwpmd
-%systemd_preun iwpmd.service
-%postun -n iwpmd
-%systemd_postun_with_restart iwpmd.service
+%endif
 
 %files
 %dir %{_sysconfdir}/rdma
@@ -409,11 +463,15 @@ fi
 %config(noreplace) %{_sysconfdir}/rdma/modules/opa.conf
 %config(noreplace) %{_sysconfdir}/rdma/modules/rdma.conf
 %config(noreplace) %{_sysconfdir}/rdma/modules/roce.conf
+%if 0
 %dir %{_sysconfdir}/modprobe.d
 %config(noreplace) %{_sysconfdir}/modprobe.d/mlx4.conf
 %config(noreplace) %{_sysconfdir}/modprobe.d/truescale.conf
+%endif
 %{_unitdir}/rdma-hw.target
+if "%{WITH_SYSTEMD}" == "1"
 %{_unitdir}/rdma-load-modules@.service
+%endif
 %dir %{dracutlibdir}
 %dir %{dracutlibdir}/modules.d
 %dir %{dracutlibdir}/modules.d/05rdma
@@ -422,6 +480,7 @@ fi
 %{_udevrulesdir}/../rdma_rename
 %{_udevrulesdir}/60-rdma-ndd.rules
 %{_udevrulesdir}/60-rdma-persistent-naming.rules
+%config(noreplace) %{_sysconfdir}/modprobe.d/ofed_mlx4.conf
 %{_udevrulesdir}/75-rdma-description.rules
 %{_udevrulesdir}/90-rdma-hw-modules.rules
 %{_udevrulesdir}/90-rdma-ulp-modules.rules
@@ -429,9 +488,14 @@ fi
 %dir %{sysmodprobedir}
 %{sysmodprobedir}/libmlx4.conf
 %{_libexecdir}/mlx4-setup.sh
+%if 0
 %{_libexecdir}/truescale-serdes.cmds
+%endif
 %{_sbindir}/rdma-ndd
+%if "%{WITH_SYSTEMD}" == "1"
 %{_unitdir}/rdma-ndd.service
+%endif
+%{_bindir}/rxe_cfg
 %{_mandir}/man7/rxe*
 %{_mandir}/man8/rdma-ndd.*
 %license COPYING.*
@@ -447,18 +511,18 @@ fi
 %endif
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/*.pc
-%{_mandir}/man3/efadv*
 %{_mandir}/man3/ibv_*
 %{_mandir}/man3/rdma*
 %{_mandir}/man3/umad*
 %{_mandir}/man3/*_to_ibv_rate.*
 %{_mandir}/man7/rdma_cm.*
-%{_mandir}/man3/manadv*
+%ifnarch s390x s390
 %{_mandir}/man3/mlx5dv*
+%endif
 %{_mandir}/man3/mlx4dv*
-%{_mandir}/man7/efadv*
-%{_mandir}/man7/manadv*
+%ifnarch s390x s390
 %{_mandir}/man7/mlx5dv*
+%endif
 %{_mandir}/man7/mlx4dv*
 %{_mandir}/man3/ibnd_*
 
@@ -574,11 +638,11 @@ fi
 %files -n libibverbs
 %dir %{_sysconfdir}/libibverbs.d
 %dir %{_libdir}/libibverbs
-%{_libdir}/libefa.so.*
 %{_libdir}/libibverbs*.so.*
 %{_libdir}/libibverbs/*.so
-%{_libdir}/libmana.so.*
+%ifnarch s390x s390
 %{_libdir}/libmlx5.so.*
+%endif
 %{_libdir}/libmlx4.so.*
 %config(noreplace) %{_sysconfdir}/libibverbs.d/*.driver
 %doc %{_docdir}/%{name}/libibverbs.md
@@ -652,8 +716,13 @@ fi
 %config(noreplace) %{_sysconfdir}/srp_daemon.conf
 %config(noreplace) %{_sysconfdir}/rdma/modules/srp_daemon.conf
 %{_libexecdir}/srp_daemon/start_on_all_ports
+%if "%{WITH_SYSTEMD}" == "1"
 %{_unitdir}/srp_daemon.service
 %{_unitdir}/srp_daemon_port@.service
+%else
+%{_initddir}/srpd
+%{_sbindir}/srp_daemon.sh
+%endif
 %{_sbindir}/ibsrpdm
 %{_sbindir}/srp_daemon
 %{_sbindir}/run_srp_daemon
