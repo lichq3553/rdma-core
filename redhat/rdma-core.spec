@@ -5,6 +5,9 @@
 %{!?_unitdir: %global _unitdir NA}
 %global WITH_SYSTEMD %(if ( test -d "%{_unitdir}" > /dev/null);then echo -n '1'; else echo -n '0'; fi)
 
+# build_docs: disabled by default
+%bcond_with build_docs
+
 Name: rdma-core
 Version: 2404mlnx51
 Release: 1%{?dist}
@@ -32,7 +35,9 @@ BuildRequires: libudev-devel
 BuildRequires: pkgconfig
 BuildRequires: pkgconfig(libnl-3.0)
 BuildRequires: pkgconfig(libnl-route-3.0)
+%if %{with build_docs}
 BuildRequires: /usr/bin/rst2man
+%endif
 BuildRequires: valgrind-devel
 %if 0%{?fedora} < 37
 BuildRequires: systemd
@@ -104,7 +109,9 @@ BuildRequires: make
 
 %if 0%{?fedora} >= 25 || 0%{?rhel} == 8
 # pandoc was introduced in FC25, Centos8
+%if %{with build_docs}
 BuildRequires: pandoc
+%endif
 %endif
 
 %description
