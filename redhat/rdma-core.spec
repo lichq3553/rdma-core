@@ -1,4 +1,6 @@
 %{!?cmake: %global cmake cmake}
+%{!?make_jobs: %global make_jobs make VERBOSE=1 %{?_smp_mflags}}
+%{!?cmake_install: %global cmake_install DESTDIR=%{buildroot} make install}
 %{!?_udevrulesdir: %global _udevrulesdir /etc/udev/rules.d}
 
 # if systemd not supported, do not install the systemd service files
@@ -118,23 +120,6 @@ ExcludeArch: %{arm}
 # which is totally inappropriate and breaks building 'ENABLE_EXPORTS' style
 # module libraries (eg ibacmp).
 %define CMAKE_FLAGS -DCMAKE_MODULE_LINKER_FLAGS=""
-%endif
-%if 0%{?fedora} >= 23 || 0%{?rhel} >= 8
-# Ninja was introduced in FC23
-BuildRequires: ninja-build
-%define CMAKE_FLAGS -GNinja
-%if 0%{?fedora} >= 33 || 0%{?rhel} >= 9
-%define make_jobs ninja-build -C %{_vpath_builddir} -v %{?_smp_mflags}
-%define cmake_install DESTDIR=%{buildroot} ninja-build -C %{_vpath_builddir} install
-%else
-%define make_jobs ninja-build -v %{?_smp_mflags}
-%define cmake_install DESTDIR=%{buildroot} ninja-build install
-%endif
-%else
-# Fallback to make otherwise
-BuildRequires: make
-%define make_jobs make VERBOSE=1 %{?_smp_mflags}
-%define cmake_install DESTDIR=%{buildroot} make install
 %endif
 
 %if 0%{?fedora} >= 25 || 0%{?rhel} == 8
