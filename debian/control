@@ -383,6 +383,7 @@ Section: libdevel
 Architecture: linux-any
 Multi-Arch: same
 Depends: libibmad5 (= ${binary:Version}), ${misc:Depends}
+Provides: libibmad-devel
 Description: Development files for libibmad
  libibmad provides low layer Infiniband functions for use by the
  InfiniBand diagnostic and management programs. These include
