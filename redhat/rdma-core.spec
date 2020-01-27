@@ -447,6 +447,13 @@ sed -i -e 's|%{_libdir}|/usr/lib|' %{buildroot}%{_mandir}/man7/ibacm_prov.7
 sed -i -e 's|%{_libdir}|/usr/lib|' ibacm_opts.cfg
  install -D -m0644 ibacm_opts.cfg %{buildroot}%{_sysconfdir}/rdma/)
 
+if [ "%{_libexecdir}" != "/usr/libexec" ]; then
+	sed -i -e 's|/usr/libexec|%{_libexecdir}|g' \
+		%{buildroot}%{dracutlibdir}/modules.d/05rdma/module-setup.sh \
+		%{buildroot}%{sysmodprobedir}/libmlx4.conf \
+		#
+fi
+
 [ -d "%{buildroot}%{_prefix}/NA" ] && %{__rm} -rf %{buildroot}%{_prefix}/NA
 
 %if %{WITH_SYSTEMD} == 1
