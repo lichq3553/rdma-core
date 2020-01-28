@@ -51,9 +51,6 @@ BuildRequires: libudev-devel
 BuildRequires: pkgconfig
 BuildRequires: pkgconfig(libnl-3.0)
 BuildRequires: pkgconfig(libnl-route-3.0)
-%if %{with build_docs}
-BuildRequires: /usr/bin/rst2man
-%endif
 %if %{with valgrind}
 BuildRequires: valgrind-devel
 %endif
@@ -90,10 +87,12 @@ BuildRequires: python
 %endif
 %endif
 
+%if %{with build_docs}
 %if 0%{?rhel} >= 8 || 0%{?fedora} >= 30 || %{with_pyverbs}
 BuildRequires: python3-docutils
 %else
 BuildRequires: python-docutils
+%endif
 %endif
 
 %if 0%{?fedora} >= 21 || 0%{?rhel} >= 8
