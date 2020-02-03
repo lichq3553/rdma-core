@@ -499,19 +499,11 @@ fi
 %doc %{_docdir}/%{name}/udev.md
 %doc %{_docdir}/%{name}/tag_matching.md
 %config(noreplace) %{_sysconfdir}/rdma/mlx4.conf
-%config(noreplace) %{_sysconfdir}/rdma/modules/infiniband.conf
-%config(noreplace) %{_sysconfdir}/rdma/modules/iwarp.conf
-%config(noreplace) %{_sysconfdir}/rdma/modules/opa.conf
 %config(noreplace) %{_sysconfdir}/rdma/modules/rdma.conf
-%config(noreplace) %{_sysconfdir}/rdma/modules/roce.conf
 %if 0
 %dir %{_sysconfdir}/modprobe.d
 %config(noreplace) %{_sysconfdir}/modprobe.d/mlx4.conf
 %config(noreplace) %{_sysconfdir}/modprobe.d/truescale.conf
-%endif
-%{_unitdir}/rdma-hw.target
-if "%{WITH_SYSTEMD}" == "1"
-%{_unitdir}/rdma-load-modules@.service
 %endif
 %dir %{dracutlibdir}
 %dir %{dracutlibdir}/modules.d
@@ -522,8 +514,6 @@ if "%{WITH_SYSTEMD}" == "1"
 %{_udevrulesdir}/60-rdma-ndd.rules
 %{_udevrulesdir}/60-rdma-persistent-naming.rules
 %{_udevrulesdir}/75-rdma-description.rules
-%{_udevrulesdir}/90-rdma-hw-modules.rules
-%{_udevrulesdir}/90-rdma-ulp-modules.rules
 %{_udevrulesdir}/90-rdma-umad.rules
 %dir %{sysmodprobedir}
 %{sysmodprobedir}/libmlx4.conf
