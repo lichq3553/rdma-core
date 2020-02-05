@@ -5,6 +5,11 @@ DefaultDependencies=false
 Conflicts=emergency.target emergency.service
 Before=remote-fs-pre.target
 
+# Only run while the openibd service is in an active state, and shutdown if
+# it becomes stopped.
+After=openibd.service
+BindsTo=openibd.service
+
 [Service]
 Type=oneshot
 RemainAfterExit=yes

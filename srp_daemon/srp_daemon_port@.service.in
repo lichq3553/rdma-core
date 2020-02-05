@@ -7,15 +7,6 @@ Before=remote-fs-pre.target
 # Do not execute concurrently with an ongoing shutdown (required for DefaultDependencies=no)
 Conflicts=shutdown.target
 Before=shutdown.target
-# Ensure required kernel modules are loaded before starting
-Requires=rdma-load-modules@srp_daemon.service
-After=rdma-load-modules@srp_daemon.service
-# Complete setting up low level RDMA hardware
-After=rdma-hw.target
-# Only run while the RDMA udev device is in an active state, and shutdown if
-# it becomes unplugged.
-After=sys-subsystem-rdma-devices-%i-umad.device
-BindsTo=sys-subsystem-rdma-devices-%i-umad.device
 # Allow srp_daemon to act as a leader for all of the port services for
 # stop/start/reset
 After=srp_daemon.service
