@@ -279,9 +279,9 @@ displays information about RDMA devices.
 %package -n ibacm
 Summary: InfiniBand Communication Manager Assistant
 Group: System Environment/Libraries
-Requires(post): systemd-units
-Requires(preun): systemd-units
-Requires(postun): systemd-units
+%if "%{WITH_SYSTEMD}" == "1"
+%{systemd_requires}
+%endif
 Requires: libibumad%{?_isa} = %{version}-%{release}
 Requires: libibverbs%{?_isa} = %{version}-%{release}
 
@@ -327,9 +327,7 @@ Obsoletes: srptools < %{version}-%{release}
 Provides: srptools = %{version}-%{release}
 Obsoletes: openib-srptools <= 0.0.6
 %if "%{WITH_SYSTEMD}" == "1"
-Requires(post): systemd-units
-Requires(preun): systemd-units
-Requires(postun): systemd-units
+%{systemd_requires}
 %endif
 Requires: libibumad%{?_isa} = %{version}-%{release}
 Requires: libibverbs%{?_isa} = %{version}-%{release}
