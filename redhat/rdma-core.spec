@@ -339,7 +339,7 @@ Example test programs for the librdmacm library.
 %package -n srp_daemon
 Summary: Tools for using the InfiniBand SRP protocol devices
 Group: System Environment/Libraries
-Obsoletes: srptools <= 1.0.3
+Obsoletes: srptools < %{version}-%{release}
 Provides: srptools = %{version}-%{release}
 Obsoletes: openib-srptools <= 0.0.6
 %if "%{WITH_SYSTEMD}" == "1"
