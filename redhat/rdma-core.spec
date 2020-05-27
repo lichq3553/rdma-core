@@ -705,6 +705,7 @@ fi
 %{_libdir}/ibacm/*
 %doc %{_docdir}/%{name}/ibacm.md
 
+%if 0
 %files -n iwpmd
 %{_sbindir}/iwpmd
 %{_unitdir}/iwpmd.service
@@ -713,6 +714,7 @@ fi
 %{_udevrulesdir}/90-iwpmd.rules
 %{_mandir}/man8/iwpmd.*
 %{_mandir}/man5/iwpmd.*
+%endif
 
 %files -n libibumad
 %{_libdir}/libibumad*.so.*
