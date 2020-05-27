@@ -58,13 +58,11 @@ Package: ibverbs-providers
 Architecture: linux-any
 Multi-Arch: same
 Depends: ${misc:Depends}, ${shlibs:Depends}
-Provides: libefa1, libipathverbs1, libmana1, libmlx4-1, libmlx5-1, libmthca1
+Provides: libefa1, libipathverbs1, libmana1, libmlx5-1, libmthca1
 Replaces: libipathverbs1,
-          libmlx4-1,
           libmlx5-1,
           libmthca1
 Breaks: libipathverbs1,
-        libmlx4-1,
         libmlx5-1,
         libmthca1
 Description: User space provider drivers for libibverbs
@@ -83,9 +81,7 @@ Description: User space provider drivers for libibverbs
   - erdma: Alibaba Elastic RDMA (iWarp) Adapter
   - irdma: Intel Ethernet Connection RDMA
   - mana: Microsoft Azure Network Adapter
-  - mlx4: Mellanox ConnectX-3 InfiniBand HCAs
   - mlx5: Mellanox Connect-IB/X-4+ InfiniBand HCAs
-  - rxe: A software implementation of the RoCE protocol
 
 Package: ibverbs-utils
 Architecture: linux-any

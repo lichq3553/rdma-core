@@ -365,7 +365,7 @@ rdma-core (15-2) unstable; urgency=medium
 rdma-core (15-1) unstable; urgency=medium
 
   * New upstream version. ibverbs-providers combines the source packages
-    libcxgb3, libipathverbs, libmlx4, libmlx5, libmthca, and libnes.
+    libcxgb3, libipathverbs, libmlx5, libmthca, and libnes.
     rdma-core also combines the source packages ibacm, libibcm, libibumad,
     libibverbs, librdmacm, and srptools (Closes: #848971)
 

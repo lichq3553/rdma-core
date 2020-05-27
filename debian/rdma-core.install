@@ -11,5 +11,4 @@ usr/share/doc/rdma-core/README.md
 usr/share/doc/rdma-core/rxe.md
 usr/share/doc/rdma-core/tag_matching.md
 usr/share/doc/rdma-core/udev.md
-usr/share/man/man7/rxe.7
 usr/share/man/man8/rdma-ndd.8

@@ -532,8 +532,6 @@ fi
 %if "%{WITH_SYSTEMD}" == "1"
 %{_unitdir}/rdma-ndd.service
 %endif
-%{_bindir}/rxe_cfg
-%{_mandir}/man7/rxe*
 %{_mandir}/man8/rdma-ndd.*
 %license COPYING.*
 
@@ -556,11 +554,9 @@ fi
 %ifnarch s390x s390
 %{_mandir}/man3/mlx5dv*
 %endif
-%{_mandir}/man3/mlx4dv*
 %ifnarch s390x s390
 %{_mandir}/man7/mlx5dv*
 %endif
-%{_mandir}/man7/mlx4dv*
 %{_mandir}/man3/ibnd_*
 
 %files -n infiniband-diags-compat
@@ -683,7 +679,6 @@ fi
 %ifnarch s390x s390
 %{_libdir}/libmlx5.so.*
 %endif
-%{_libdir}/libmlx4.so.*
 %config(noreplace) %{_sysconfdir}/libibverbs.d/*.driver
 %doc %{_docdir}/%{name}/libibverbs.md
 

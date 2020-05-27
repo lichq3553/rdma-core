@@ -79,6 +79,9 @@ ifeq (,$(filter-out $(NON_COHERENT_DMA_ARCHS),$(DEB_HOST_ARCH)))
 endif
 	dh_auto_install
 	rm -f debian/tmp/lib/systemd/system/ibacm.socket
+	mkdir installed_docs
+	mv debian/tmp/usr/share/doc/rdma-core/* installed_docs/
+	rm -rf debian/tmp/usr/share/doc
 
 # The following files are not used on Debian (we ship our own sysvinit script)
 INST_EXCLUDE := "etc/init.d/srpd" \
