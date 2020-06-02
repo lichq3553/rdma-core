@@ -92,6 +92,7 @@ override_dh_install:
 	extra_params= ; \
 	if [ ! -e build-deb/python/pyverbs/__init__.py ]; then \
 		extra_params="-Npython3-pyverbs --remaining-packages" ; \
+		mkdir -p installed_docs/tests; \
 	fi ; \
 	dh_install $$extra_params $(INST_EXCLUDE) --fail-missing
 
