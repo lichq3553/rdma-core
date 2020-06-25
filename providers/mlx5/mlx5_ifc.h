@@ -1443,6 +1443,56 @@ struct mlx5_ifc_odp_cap_bits {
 	u8         reserved_at_120[0x6e0];
 };
 
+struct mlx5_ifc_per_protocol_networking_offload_caps_bits {
+	u8         csum_cap[0x1];
+	u8         vlan_cap[0x1];
+	u8         lro_cap[0x1];
+	u8         lro_psh_flag[0x1];
+	u8         lro_time_stamp[0x1];
+	u8         reserved_at_5[0x2];
+	u8         wqe_vlan_insert[0x1];
+	u8         self_lb_en_modifiable[0x1];
+	u8         reserved_at_9[0x2];
+	u8         max_lso_cap[0x5];
+	u8         multi_pkt_send_wqe[0x2];
+	u8         wqe_inline_mode[0x2];
+	u8         rss_ind_tbl_cap[0x4];
+	u8         reg_umr_sq[0x1];
+	u8         scatter_fcs[0x1];
+	u8         enhanced_multi_pkt_send_wqe[0x1];
+	u8         tunnel_lso_const_out_ip_id[0x1];
+	u8         reserved_at_1c[0x2];
+	u8         tunnel_stateless_gre[0x1];
+	u8         tunnel_stateless_vxlan[0x1];
+
+	u8         swp[0x1];
+	u8         swp_csum[0x1];
+	u8         swp_lso[0x1];
+	u8         cqe_checksum_full[0x1];
+	u8         tunnel_stateless_geneve_tx[0x1];
+	u8         tunnel_stateless_mpls_over_udp[0x1];
+	u8         tunnel_stateless_mpls_over_gre[0x1];
+	u8         tunnel_stateless_vxlan_gpe[0x1];
+	u8         tunnel_stateless_ipv4_over_vxlan[0x1];
+	u8         tunnel_stateless_ip_over_ip[0x1];
+	u8         insert_trailer[0x1];
+	u8         tunnel_stateless_gtp[0x1];
+	u8         reserved_at_2c[0x4];
+	u8         max_vxlan_udp_ports[0x8];
+	u8         reserved_at_38[0x6];
+	u8         max_geneve_opt_len[0x1];
+	u8         tunnel_stateless_geneve_rx[0x1];
+
+	u8         reserved_at_40[0x10];
+	u8         lro_min_mss_size[0x10];
+
+	u8         reserved_at_60[0x120];
+
+	u8         lro_timer_supported_periods[4][0x20];
+
+	u8         reserved_at_200[0x600];
+};
+
 struct mlx5_ifc_e_switch_cap_bits {
 	u8         reserved_at_0[0x4b];
 	u8         log_max_esw_sf[0x5];
@@ -1520,6 +1570,7 @@ struct mlx5_ifc_crypto_caps_bits {
 union mlx5_ifc_hca_cap_union_bits {
 	struct mlx5_ifc_atomic_caps_bits atomic_caps;
 	struct mlx5_ifc_cmd_hca_cap_bits cmd_hca_cap;
+	struct mlx5_ifc_per_protocol_networking_offload_caps_bits per_protocol_networking_offload_caps;
 	struct mlx5_ifc_flow_table_nic_cap_bits flow_table_nic_cap;
 	struct mlx5_ifc_flow_table_eswitch_cap_bits flow_table_eswitch_cap;
 	struct mlx5_ifc_e_switch_cap_bits e_switch_cap;
@@ -1567,6 +1618,7 @@ enum mlx5_cap_type {
 
 enum {
 	MLX5_SET_HCA_CAP_OP_MOD_GENERAL_DEVICE        = 0x0 << 1,
+	MLX5_SET_HCA_CAP_OP_MOD_ETHERNET_OFFLOAD      = 0x1 << 1,
 	MLX5_SET_HCA_CAP_OP_MOD_ROCE                  = 0x4 << 1,
 	MLX5_SET_HCA_CAP_OP_MOD_NIC_FLOW_TABLE        = 0x7 << 1,
 	MLX5_SET_HCA_CAP_OP_MOD_ESW_FLOW_TABLE        = 0x8 << 1,
