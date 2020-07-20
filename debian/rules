@@ -100,6 +100,7 @@ override_dh_install:
 # pre-postrms
 override_dh_installinit:
 	dh_installinit -prdma-core --onlyscripts --name=iwpmd
+	dh_installinit -psrptools --error-handler=srptools_error_handler
 	dh_installinit --remaining-packages
 
 override_dh_installsystemd:
