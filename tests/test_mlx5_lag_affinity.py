@@ -42,6 +42,11 @@ class LagPortTestCase(Mlx5RDMATestCase):
         self.server = None
         self.client = None
 
+    def tearDown(self):
+        super().tearDown()
+        del self.server
+        del self.client
+
     def modify_lag(self, resources):
         try:
             port_num, active_port_num = Mlx5QP.query_lag_port(resources.qp)
