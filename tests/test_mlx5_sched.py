@@ -87,3 +87,10 @@ class Mlx5SchedTrafficTest(Mlx5RDMATestCase):
                 raise unittest.SkipTest('Creation or usage of schedule elements is not supported')
             raise ex
         u.traffic(**self.traffic_args)
+
+    def tearDown(self):
+        if self.server:
+            self.server.ctx.close()
+        if self.client:
+            self.client.ctx.close()
+        super().tearDown()
