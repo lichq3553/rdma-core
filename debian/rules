@@ -18,10 +18,14 @@ else
 endif
 DH_MODULES = $(PYTHON_DH)$(SYSTEMD_DH_EXTRA)
 
+ifneq (,$(filter nopyverbs,$(DEB_BUILD_OPTIONS)))
+   NO_PYVERBS = 1
+else
 ifneq (,$(wildcard /usr/bin/python3))
    NO_PYVERBS = 0
 else
    NO_PYVERBS = 1
+endif
 endif
 
 %:
