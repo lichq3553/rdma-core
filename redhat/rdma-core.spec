@@ -263,9 +263,7 @@ Device-specific plug-in ibverbs userspace drivers are included:
 - liberdma: Alibaba Elastic RDMA (iWarp) Adapter
 - libirdma: Intel Ethernet Connection RDMA
 - libmana: Microsoft Azure Network Adapter
-- libmlx4: Mellanox ConnectX-3 InfiniBand HCA
-- libmlx5: Mellanox Connect-IB/X-4+ InfiniBand HCA
-- librxe: A software implementation of the RoCE protocol
+- libmlx5: Mellanox ConnectX-4+ InfiniBand HCA
 
 %package -n libibverbs-utils
 Summary: Examples for the libibverbs library

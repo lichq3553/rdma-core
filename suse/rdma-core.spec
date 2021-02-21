@@ -225,21 +225,9 @@ fast path operations.
 
 Device-specific plug-in ibverbs userspace drivers are included:
 
-- libcxgb4: Chelsio T4 iWARP HCA
-- libefa: Amazon Elastic Fabric Adapter
-- libhfi1: Intel Omni-Path HFI
-- libhns: HiSilicon Hip06 SoC
-- libipathverbs: QLogic InfiniPath HCA
 - libirdma: Intel Ethernet Connection RDMA
 - libmana: Microsoft Azure Network Adapter
-- libmlx4: Mellanox ConnectX-3 InfiniBand HCA
-- libmlx5: Mellanox Connect-IB/X-4+ InfiniBand HCA
-- libmthca: Mellanox InfiniBand HCA
-- libocrdma: Emulex OneConnect RDMA/RoCE Device
-- libqedr: QLogic QL4xxx RoCE HCA
-- librxe: A software implementation of the RoCE protocol
-- libsiw: A software implementation of the iWarp protocol
-- libvmw_pvrdma: VMware paravirtual RDMA device
+- libmlx5: Mellanox ConnectX-4+ InfiniBand HCA
 
 %package -n %verbs_lname
 Summary:        Ibverbs runtime library
