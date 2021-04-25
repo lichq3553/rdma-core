@@ -806,7 +806,10 @@ struct dr_match_misc2 {
 	uint32_t metadata_reg_c_1;			/* metadata_reg_c_1 */
 	uint32_t metadata_reg_c_0;			/* metadata_reg_c_0 */
 	uint32_t metadata_reg_a;			/* metadata_reg_a */
-	uint32_t reserved_at_1a0;
+	uint32_t psp_syndrome:8;
+	uint32_t reserved_at_1a8:8;
+	uint32_t ipsec_syndrome:8;
+	uint32_t ipsec_next_header:8;
 	uint32_t reserved_at_1c0;
 	uint32_t reserved_at_1e0;
 };

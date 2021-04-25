@@ -1030,7 +1030,10 @@ static void dr_ste_copy_mask_misc2(char *mask, struct dr_match_misc2 *spec, bool
 	spec->metadata_reg_c_1 = DR_DEVX_GET_CLEAR(dr_match_set_misc2, mask, metadata_reg_c_1, clear);
 	spec->metadata_reg_c_0 = DR_DEVX_GET_CLEAR(dr_match_set_misc2, mask, metadata_reg_c_0, clear);
 	spec->metadata_reg_a = DR_DEVX_GET_CLEAR(dr_match_set_misc2, mask, metadata_reg_a, clear);
-	spec->reserved_at_1a0 = DEVX_GET(dr_match_set_misc2, mask, reserved_at_1a0);
+	spec->psp_syndrome = DEVX_GET(dr_match_set_misc2, mask, psp_syndrome);
+	spec->reserved_at_1a8 = DEVX_GET(dr_match_set_misc2, mask, reserved_at_1a8);
+	spec->ipsec_syndrome = DEVX_GET(dr_match_set_misc2, mask, ipsec_syndrome);
+	spec->ipsec_next_header = DEVX_GET(dr_match_set_misc2, mask, ipsec_next_header);
 	spec->reserved_at_1c0 = DEVX_GET(dr_match_set_misc2, mask, reserved_at_1c0);
 	spec->reserved_at_1e0 = DEVX_GET(dr_match_set_misc2, mask, reserved_at_1e0);
 }

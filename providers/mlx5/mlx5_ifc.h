@@ -642,7 +642,10 @@ struct mlx5_ifc_dr_match_set_misc2_bits {
 
 	u8         metadata_reg_a[0x20];
 
-	u8         reserved_at_1a0[0x20];
+	u8         psp_syndrome[0x8];
+	u8         reserved_at_1a8[0x8];
+	u8         ipsec_syndrome[0x8];
+	u8         ipsec_next_header[0x8];
 	u8         reserved_at_1c0[0x20];
 	u8         reserved_at_1e0[0x20];
 };
