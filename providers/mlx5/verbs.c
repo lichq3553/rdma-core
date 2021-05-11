@@ -5982,6 +5982,9 @@ static int __mlx5dv_query_port(struct ibv_context *context,
 			       uint32_t port_num,
 			       struct mlx5dv_port *info, size_t info_len)
 {
+	struct mlx5dv_devx_port devx_port = {};
+	int err;
+
 	DECLARE_COMMAND_BUFFER(cmd,
 			       UVERBS_OBJECT_DEVICE,
 			       MLX5_IB_METHOD_QUERY_PORT,
@@ -5990,7 +5993,61 @@ static int __mlx5dv_query_port(struct ibv_context *context,
 	fill_attr_in_uint32(cmd, MLX5_IB_ATTR_QUERY_PORT_PORT_NUM, port_num);
 	fill_attr_out(cmd, MLX5_IB_ATTR_QUERY_PORT, info, info_len);
 
-	return execute_ioctl(context, cmd);
+	err = execute_ioctl(context, cmd);
+	if (!err)
+		return err;
+
+	devx_port.comp_mask = MLX5DV_DEVX_PORT_VPORT |
+		MLX5DV_DEVX_PORT_ESW_OWNER_VHCA_ID |
+		MLX5DV_DEVX_PORT_VPORT_VHCA_ID |
+		MLX5DV_DEVX_PORT_VPORT_ICM_RX |
+		MLX5DV_DEVX_PORT_VPORT_ICM_TX |
+		MLX5DV_DEVX_PORT_MATCH_REG_C_0;
+
+	err = _mlx5dv_query_devx_port(context, port_num, &devx_port);
+	if (err)
+		return err;
+
+	memset(info, 0, info_len);
+
+	if (devx_port.comp_mask & MLX5DV_DEVX_PORT_VPORT &&
+	    info_len >= offsetofend(struct mlx5dv_port, vport)) {
+		info->flags |= MLX5DV_QUERY_PORT_VPORT;
+		info->vport = devx_port.vport_num;
+	}
+
+	if (devx_port.comp_mask & MLX5DV_DEVX_PORT_VPORT_VHCA_ID &&
+	    info_len >= offsetofend(struct mlx5dv_port, vport_vhca_id)) {
+		info->flags |= MLX5DV_QUERY_PORT_VPORT_VHCA_ID;
+		info->vport_vhca_id = devx_port.vport_vhca_id;
+	}
+
+	if (devx_port.comp_mask & MLX5DV_DEVX_PORT_VPORT_ICM_RX &&
+	    info_len >= offsetofend(struct mlx5dv_port, vport_steering_icm_rx)) {
+		info->flags |= MLX5DV_QUERY_PORT_VPORT_STEERING_ICM_RX;
+		info->vport_steering_icm_rx = devx_port.icm_addr_rx;
+	}
+
+	if (devx_port.comp_mask & MLX5DV_DEVX_PORT_VPORT_ICM_TX &&
+	    info_len >= offsetofend(struct mlx5dv_port, vport_steering_icm_tx)) {
+		info->flags |= MLX5DV_QUERY_PORT_VPORT_STEERING_ICM_TX;
+		info->vport_steering_icm_tx = devx_port.icm_addr_tx;
+	}
+
+	if (devx_port.comp_mask & MLX5DV_DEVX_PORT_ESW_OWNER_VHCA_ID &&
+	    info_len >= offsetofend(struct mlx5dv_port, esw_owner_vhca_id)) {
+		info->flags |= MLX5DV_QUERY_PORT_ESW_OWNER_VHCA_ID;
+		info->esw_owner_vhca_id = devx_port.esw_owner_vhca_id;
+	}
+
+	if (devx_port.comp_mask & MLX5DV_DEVX_PORT_MATCH_REG_C_0 &&
+	    info_len >= offsetofend(struct mlx5dv_port, reg_c0)) {
+		info->flags |= MLX5DV_QUERY_PORT_VPORT_REG_C0;
+		info->reg_c0 = devx_port.reg_c_0;
+	}
+
+	return err;
+
 }
 
 int _mlx5dv_query_port(struct ibv_context *context,
