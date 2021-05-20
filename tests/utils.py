@@ -22,10 +22,8 @@ from pyverbs.qp import QPCap, QPInitAttr, QPInitAttrEx, QPAttr, QPEx, QP
 from tests.mlx5_base import Mlx5DcResources, Mlx5DcStreamsRes
 from tests.base import XRCResources, DCT_KEY, MLNX_VENDOR_ID
 from pyverbs.addr import AHAttr, AH, GlobalRoute
-from pyverbs.providers.efa.efadv import EfaCQ
 from pyverbs.wr import SGE, SendWR, RecvWR
 from pyverbs.base import PyverbsRDMAErrno
-from tests.efa_base import SRDResources
 from pyverbs.cq import PollCqAttr, CQEX
 from pyverbs.mr import MW, MWBindInfo
 from pyverbs.mem_alloc import madvise
@@ -509,8 +507,6 @@ def post_send_ex(agr_obj, send_object, send_op=None, qp_idx=0, ah=None, **kwargs
         qp.wr_send()
     if qp_type == e.IBV_QPT_UD:
         qp.wr_set_ud_addr(ah, agr_obj.rqps_num[qp_idx], agr_obj.UD_QKEY)
-    if isinstance(agr_obj, SRDResources):
-        qp.wr_set_ud_addr(ah, agr_obj.rqps_num[qp_idx], agr_obj.SRD_QKEY)
     if qp_type == e.IBV_QPT_XRC_SEND:
         qp.wr_set_xrc_srqn(agr_obj.remote_srqn)
     if hasattr(agr_obj, 'remote_dct_num'):
@@ -544,8 +540,6 @@ def post_send(agr_obj, send_wr, qp_idx=0, ah=None, is_imm=False):
         send_wr.imm_data = socket.htonl(IMM_DATA)
     if qp_type == e.IBV_QPT_UD:
         send_wr.set_wr_ud(ah, agr_obj.rqps_num[qp_idx], agr_obj.UD_QKEY)
-    if isinstance(agr_obj, SRDResources):
-        send_wr.set_wr_ud(ah, agr_obj.rqps_num[qp_idx], agr_obj.SRD_QKEY)
     agr_obj.qps[qp_idx].post_send(send_wr, None)
 
 
@@ -651,9 +645,6 @@ def poll_cq_ex(cqex, count=1, data=None, sgid=None):
         if data:
             assert data == socket.ntohl(cqex.read_imm_data())
 
-        if isinstance(cqex, EfaCQ):
-            if sgid is not None and cqex.read_opcode() == e.IBV_WC_RECV:
-                assert sgid.gid == cqex.read_sgid().gid
         # Now poll the rest of the packets
         while count > 0 and (time.perf_counter() - start_poll_t < POLL_CQ_TIMEOUT):
             ret = cqex.poll_next()
@@ -668,9 +659,6 @@ def poll_cq_ex(cqex, count=1, data=None, sgid=None):
             if data:
                 assert data == socket.ntohl(cqex.read_imm_data())
 
-            if isinstance(cqex, EfaCQ):
-                if sgid is not None and cqex.read_opcode() == e.IBV_WC_RECV:
-                    assert sgid.gid == cqex.read_sgid().gid
             count -= 1
         if count > 0:
             raise PyverbsError(f'Got timeout on polling ({count} CQEs remaining)')
@@ -1130,8 +1118,7 @@ def rdma_traffic(client, server, iters, gid_idx, port, new_send=False,
     :return:
     """
     # Using the new post send API, we need the SGE, not the SendWR
-    if isinstance(client, Mlx5DcResources) or \
-       isinstance(client, SRDResources):
+    if isinstance(client, Mlx5DcResources):
         ah_client = get_global_ah(client, gid_idx, port)
         ah_server = get_global_ah(server, gid_idx, port)
     else:
@@ -1557,7 +1544,6 @@ def is_eth(ctx, port_num):
 
 def is_datagram_qp(agr_obj):
     if agr_obj.qp.qp_type == e.IBV_QPT_UD or \
-       isinstance(agr_obj, SRDResources) or \
        isinstance(agr_obj, Mlx5DcResources):
         return True
     return False

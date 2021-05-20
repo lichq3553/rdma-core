@@ -1,0 +1,2 @@
+sep=;
+Change-Id=I16e4881a994c1fb6379f48a0fe64397b2c56d4f4; subject=tests: Remove Efa related code from utils.py; feature=pyverbs; upstream_status=NA; general=;
