@@ -382,7 +382,7 @@ int dr_devx_query_device(struct ibv_context *ctx, struct dr_devx_caps *caps)
 					       ft_field_bitmask_support_2_nic_receive.
 					       tunnel_header_2_3));
 
-	if (sf_supp && caps->eswitch_manager) {
+	if (caps->eswitch_manager) {
 		DEVX_SET(query_hca_cap_in, in, op_mod,
 			 MLX5_SET_HCA_CAP_OP_MOD_ESW | HCA_CAP_OPMOD_GET_CUR);
 
@@ -392,8 +392,11 @@ int dr_devx_query_device(struct ibv_context *ctx, struct dr_devx_caps *caps)
 			dr_dbg_ctx(ctx, "Query eswitch capabilities failed %d\n", err);
 			return err;
 		}
-		max_sfs = 1 << DEVX_GET(query_hca_cap_out, out,
+		if (sf_supp)
+			max_sfs = 1 << DEVX_GET(query_hca_cap_out, out,
 					capability.e_switch_cap.log_max_esw_sf);
+		caps->merged_eswitch = DEVX_GET(query_hca_cap_out, out,
+					capability.e_switch_cap.merged_eswitch);
 	}
 
 	if (caps->eswitch_manager) {

@@ -1494,7 +1494,9 @@ struct mlx5_ifc_per_protocol_networking_offload_caps_bits {
 };
 
 struct mlx5_ifc_e_switch_cap_bits {
-	u8         reserved_at_0[0x4b];
+	u8         reserved_at_0[0x1d];
+	u8         merged_eswitch[0x1];
+	u8         reserved_at_1e[0x2d];
 	u8         log_max_esw_sf[0x5];
 	u8         esw_sf_base_id[0x10];
 
