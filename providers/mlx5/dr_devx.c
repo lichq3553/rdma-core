@@ -662,6 +662,12 @@ dr_devx_set_fte(struct ibv_context *ctx,
 			switch (type) {
 			case MLX5_FLOW_DEST_TYPE_VPORT:
 				id = fte_attr->dest_arr[i].vport_num;
+				DEVX_SET(dest_format, in_dests,
+					 destination_eswitch_owner_vhca_id_valid,
+					 !!(fte_attr->dest_arr[i].flags & MLX5_FLOW_DEST_VPORT_VHCA_ID));
+				DEVX_SET(dest_format, in_dests,
+					 destination_eswitch_owner_vhca_id,
+					 fte_attr->dest_arr[i].vhca_id);
 				break;
 			case MLX5_FLOW_DEST_TYPE_TIR:
 				id = fte_attr->dest_arr[i].tir_num;
@@ -676,7 +682,7 @@ dr_devx_set_fte(struct ibv_context *ctx,
 
 			DEVX_SET(dest_format, in_dests, destination_type, type);
 			DEVX_SET(dest_format, in_dests, destination_id, id);
-			if (fte_attr->dest_arr[i].has_reformat) {
+			if (fte_attr->dest_arr[i].flags & MLX5_FLOW_DEST_VPORT_REFORMAT_ID) {
 				if (!fte_attr->extended_dest) {
 					errno = EINVAL;
 					goto err_out;

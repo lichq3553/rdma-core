@@ -4380,9 +4380,10 @@ struct mlx5_ifc_dest_format_bits {
 	u8         destination_type[0x8];
 	u8         destination_id[0x18];
 
-	u8         reserved_at_20[0x1];
+	u8         destination_eswitch_owner_vhca_id_valid[0x1];
 	u8         packet_reformat[0x1];
-	u8         reserved_at_22[0x1e];
+	u8         reserved_at_22[0xe];
+	u8         destination_eswitch_owner_vhca_id[0x10];
 };
 
 struct mlx5_ifc_extended_dest_format_bits {

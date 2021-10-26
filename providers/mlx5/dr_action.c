@@ -2497,6 +2497,10 @@ dr_action_convert_to_fte_dest(struct mlx5dv_dr_domain *dmn,
 		fte_attr->action |= MLX5_FLOW_CONTEXT_ACTION_FWD_DEST;
 		dest_info->type = MLX5_FLOW_DEST_TYPE_VPORT;
 		dest_info->vport_num = dest->vport.caps->num;
+		if (dmn->info.caps.merged_eswitch) {
+			dest_info->flags |= MLX5_FLOW_DEST_VPORT_VHCA_ID;
+			dest_info->vhca_id = dest->vport.caps->vhca_gvmi;
+		}
 		break;
 	case DR_ACTION_TYP_QP:
 		fte_attr->action |= MLX5_FLOW_CONTEXT_ACTION_FWD_DEST;
@@ -2544,7 +2548,7 @@ dr_action_convert_to_fte_dest(struct mlx5dv_dr_domain *dmn,
 				goto err_exit;
 
 			fte_attr->extended_dest = true;
-			dest_info->has_reformat = true;
+			dest_info->flags |= MLX5_FLOW_DEST_VPORT_REFORMAT_ID;
 			dest_info->reformat_id = dest_reformat->reformat.dvo->object_id;
 			break;
 		default:

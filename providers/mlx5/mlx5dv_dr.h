@@ -1005,16 +1005,24 @@ struct dr_devx_flow_group_attr {
 	uint32_t	table_type;
 };
 
+enum {
+	MLX5_FLOW_DEST_VPORT_VHCA_ID      = BIT(0),
+	MLX5_FLOW_DEST_VPORT_REFORMAT_ID  = BIT(1),
+};
+
 struct dr_devx_flow_dest_info {
 	enum dr_devx_flow_dest_type type;
 	union {
-		uint32_t vport_num;
 		uint32_t tir_num;
 		uint32_t counter_id;
 		uint32_t ft_id;
+		struct {
+			uint16_t vport_num;
+			uint16_t vhca_id;
+		};
 	};
-	bool has_reformat;
 	uint32_t reformat_id;
+	uint8_t flags;
 };
 
 struct dr_devx_flow_fte_attr {
