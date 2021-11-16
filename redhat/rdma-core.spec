@@ -108,6 +108,8 @@ Provides: rdma = %{version}-%{release}
 Obsoletes: rdma < %{version}-%{release}
 Provides: rdma-ndd = %{version}-%{release}
 Obsoletes: rdma-ndd < %{version}-%{release}
+Provides: rdma-core-help = %{version}-%{release}
+Obsoletes: rdma-core-help < %{version}-%{release}
 # the ndd utility moved from infiniband-diags to rdma-core
 Conflicts: infiniband-diags <= 1.6.7
 Requires: pciutils
