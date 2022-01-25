@@ -21,6 +21,7 @@
 %endif
 
 %define rst2man_exist %(test -f /usr/bin/rst2man; echo $?)
+%define __cmake_in_source_build 0
 
 %define python38_exist %(test -f /usr/bin/python3.8; echo $?)
 %if 0%{?bclinux} == 8 && %{python38_exist} == 0
