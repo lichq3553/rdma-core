@@ -1,0 +1,6 @@
+sep=;
+Change-Id=Ie6590e529afcb81e97cbb83c8046290010bf7f24; subject=OFED: Update makefile to exclude non-mellanox providers from build; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I8168f6aac7404d38653a6936bdc9639d2e98b27b; subject=OFED: Add compat headers to build against old kernels; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I18dc2a51697db98ad0342c9a91ced59632da5e10; subject=OFED: Adapt debian files needed to build deb package; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I71cbff313f72a0560898c098b7532928507de423; subject=OFED: Do not install mlx4.conf in rpm and deb packages; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=Ibfdbaf31fa76412b00e65b0429c83d38ea0dcef2; subject=OFED: Use the dollar syntax in cmake's pyverbs check; feature=ofed_scripts; upstream_status=ignore; general=;

@@ -1,0 +1,3 @@
+sep=;
+Change-Id=I33c3174a4400a23ed8a4ef64a14f5a7b6cad5998; subject=rdma-core.spec: python36 and cmake3 in RHEL7; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I35cfc3675a56833ea63c952aedd385e55cb95764; subject=kernel-boot: make persistent names use NAME_KERNEL instead of NAME_FALLBACK; feature=ofed_scripts; upstream_status=ignore; general=;

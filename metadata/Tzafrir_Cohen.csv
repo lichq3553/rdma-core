@@ -1,0 +1,15 @@
+sep=;
+Change-Id=I428fe97c834b518bc0259c91e73f4f5f518638dc; subject=OFED: rdma.conf: don't load storage modules by default; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I6ed86c8bacff7a55ff422f3104fcaa36af880c99; subject=Don't install ibacm init script; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I52ee42ec8a6476d6cd605d1cc311445a533252e9; subject=debian: Move ibacm services to the ibacm subpackage; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I63111c9af79d40c0aa7021c11d7913b282b22c28; subject=OFED: Enable installing man pages only if rst2man exists; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I085069456a1f7f3331c3b689eac94d956e99eead; subject=rdma-core.spec: Disable valgrind build-requirements; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=Ie743b187b4f2e56992f934f4c0b4419b68eb4dd3; subject=Disable automatic install of ibacm.socket; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I5aa1978961731116f0489407a8c8e12235fec45a; subject=Don't hardcode path of libexec: explicit edit; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=Icfbefa985732c695d39961d55c4da6dd9dc5c67f; subject=redhat/rdma-core.spec: Obsolete newer srptools; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=Ia0209c459845aa15cf77d2136a191e99552caf17; subject=docs location; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I61bbe103f89188f67606557fc94d79adfeea9a2b; subject=spec: remove a superfluous dependency on rst2man; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I4147c61f026a6aa3c1f4942979a1dd4f936a2eba; subject=Avoid incorrect systemd-units on SLES15; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I44c4b6cda3294095fc915f0da2601349647ea022; subject=deb: fake generated tests docs if no pyverbs; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I518cdd138d3f2c50f828ce728905f1159a413756; subject=srptools: don't fail deb install if service fails; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=Ieeb77abea5bef63f70b1e38966cc4b4b9c82c858; subject=deb: Disable building pyverbs on build opt nopyverbs; feature=ofed_scripts; upstream_status=ignore; general=;

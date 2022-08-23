@@ -1,0 +1,2 @@
+sep=;
+Change-Id=I66860b9b0f39025b5d3f7e0b77d19ce81049959a; subject=debian: Exclude compressing python files while building the rdma-core; feature=ofed_scripts; upstream_status=ignore; general=;

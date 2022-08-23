@@ -1,0 +1,8 @@
+sep=;
+Change-Id=I62ffa1f573074545fc27c21d19c4fdbae6478c11; subject=OFED: rdma-core.spec: Enable static libs by default; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I285019f2325eb9b198c05d916dc8b190bd89025a; subject=debian: Provide "libibmad-devel" by libibmad-dev; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I8579648d5f6067cee865a1eceec0afc18f28d9f0; subject=OFED: Adapt rdma-core.spec needed to build rpm package; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I3d4bd6af6a16d63707ff3de36f42e2195733d180; subject=rdma-core.spec: Allow disabling docs build-requirements; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I91bf28289a74add5a3bd0b5397be2bba91fdfe0e; subject=rdma-core.spec: use existing %cmake_install and %make_jobs; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I182ffeb506881319e4d0b9cd118aa3affb9d4367; subject=rdma-core.spec: Drop unsupported devices from spec description; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I8e152231f7afb44688f5731f64dff581957cf5e6; subject=Pyverbs: Exclude non Mellanox tests from running; feature=ofed_scripts; upstream_status=ignore; general=;

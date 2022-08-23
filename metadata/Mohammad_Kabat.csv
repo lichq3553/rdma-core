@@ -1,0 +1,10 @@
+sep=;
+Change-Id=I0148b19b72fe77b57aac472314a1ff9a4bb7c829; subject=initial commit; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I556c8896ac544a24d3c7d709e0945056ec34698c; subject=devtools: Add metadata scripts; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=Id1806b47804a4d6c4c42599809d30a6232b34271; subject=redhat/rdma-core.spec: Block use of iwpmd; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=Ica5f39f45a9d58862b904ad6b9df0d14eddbe714; subject=debian: Remove mlx4, mana and rxe.; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I5e7653408c3e99af026a26659fcbcd2cac42d3af; subject=Remove efadv test; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=Idc0a5c75455bfb3ca9c5ef6c3eddc1c3e7bc9426; subject=Remove deprecated NICs.; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I8ea536c0851a86e16f9849ba041908cd8cb877b4; subject=rdma-core.spec: Set rdma-core-help to be obsoleted; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=Ib0f5c81d9ceb4f68c45177ed2d4487a4a7606d32; subject=rdma-core.spec: Disbale usage of __cmake_in_source_build by define; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I11d2911a0bc94e1fa32453bace5d9a0a4343cd2c; subject=Update metadata; feature=ofed_scripts; upstream_status=ignore; general=;

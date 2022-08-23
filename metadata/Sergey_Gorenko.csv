@@ -1,0 +1,3 @@
+sep=;
+Change-Id=I9e1b0f8b49f91107f877599ef26a29593ea83178; subject=Add ENABLE_SRP_COMPAT build option; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=Ia7b111448ec78859c32ecd74904762ae91094489; subject=Update dependencies of the srp_daemon service; feature=ofed_scripts; upstream_status=ignore; general=;
