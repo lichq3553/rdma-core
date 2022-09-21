@@ -283,6 +283,7 @@ Group: System Environment/Libraries
 %if "%{WITH_SYSTEMD}" == "1"
 %{systemd_requires}
 %endif
+Conflicts: rdma-core < 32
 Requires: libibumad%{?_isa} = %{version}-%{release}
 Requires: libibverbs%{?_isa} = %{version}-%{release}
 

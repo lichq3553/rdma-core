@@ -13,3 +13,4 @@ Change-Id=I4147c61f026a6aa3c1f4942979a1dd4f936a2eba; subject=Avoid incorrect sys
 Change-Id=I44c4b6cda3294095fc915f0da2601349647ea022; subject=deb: fake generated tests docs if no pyverbs; feature=ofed_scripts; upstream_status=ignore; general=;
 Change-Id=I518cdd138d3f2c50f828ce728905f1159a413756; subject=srptools: don't fail deb install if service fails; feature=ofed_scripts; upstream_status=ignore; general=;
 Change-Id=Ieeb77abea5bef63f70b1e38966cc4b4b9c82c858; subject=deb: Disable building pyverbs on build opt nopyverbs; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=Ie8a831023eea8282966e68cc32e6773b7ccef5de; subject=spec: Add conflict of ibacm with old rdma-core; feature=ofed_scripts; upstream_status=ignore; general=;
