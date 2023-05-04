@@ -8,3 +8,4 @@ Change-Id=Idc0a5c75455bfb3ca9c5ef6c3eddc1c3e7bc9426; subject=Remove deprecated N
 Change-Id=I8ea536c0851a86e16f9849ba041908cd8cb877b4; subject=rdma-core.spec: Set rdma-core-help to be obsoleted; feature=ofed_scripts; upstream_status=ignore; general=;
 Change-Id=Ib0f5c81d9ceb4f68c45177ed2d4487a4a7606d32; subject=rdma-core.spec: Disbale usage of __cmake_in_source_build by define; feature=ofed_scripts; upstream_status=ignore; general=;
 Change-Id=I11d2911a0bc94e1fa32453bace5d9a0a4343cd2c; subject=Update metadata; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=Ifef59ac2cd293d382b20637af47c2e7127c8835a; subject=rdma-core.spec: Require python38-Cython on alinux OS; feature=ofed_scripts; upstream_status=ignore; general=;

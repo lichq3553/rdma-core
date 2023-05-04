@@ -24,7 +24,7 @@
 %define __cmake_in_source_build 0
 
 %define python38_exist %(test -f /usr/bin/python3.8; echo $?)
-%if 0%{?bclinux} == 8 && %{python38_exist} == 0
+%if (0%{?bclinux} == 8 || 0%{?alinux} == 3) && %{python38_exist} == 0
 %define __python3 /usr/bin/python3.8
 %endif
 
@@ -74,7 +74,7 @@ BuildRequires: cmake3
 %global cmake %cmake3
 %else
 BuildRequires: cmake >= 2.8.11
-%if 0%{?bclinux} == 8 && %{python38_exist} == 0
+%if (0%{?bclinux} == 8 || 0%{?alinux} == 3) && %{python38_exist} == 0
 BuildRequires: python38-devel
 BuildRequires: python38-Cython
 %else
