@@ -104,12 +104,17 @@ override_dh_install:
 # pre-postrms
 override_dh_installinit:
 	dh_installinit -prdma-core --onlyscripts --name=iwpmd
-	dh_installinit -psrptools --error-handler=srptools_error_handler
+	dh_installinit -psrptools --error-handler=srptools_error_handler --no-start
 	dh_installinit --remaining-packages
 
 override_dh_installsystemd:
 	dh_installsystemd -pibacm --no-start ibacm.service
+	dh_installsystemd -psrptools --no-start
 	dh_installsystemd --remaining-packages
+
+override_dh_systemd_start:
+	dh_systemd_start -psrptools --no-start
+	dh_systemd_start --remaining-packages
 
 override_dh_compress:
 	dh_compress -X .py
