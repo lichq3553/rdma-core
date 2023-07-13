@@ -11,3 +11,4 @@ Change-Id=I11d2911a0bc94e1fa32453bace5d9a0a4343cd2c; subject=Update metadata; fe
 Change-Id=Ifef59ac2cd293d382b20637af47c2e7127c8835a; subject=rdma-core.spec: Require python38-Cython on alinux OS; feature=ofed_scripts; upstream_status=ignore; general=;
 Change-Id=I16e4881a994c1fb6379f48a0fe64397b2c56d4f4; subject=tests: Remove Efa related code from utils.py; feature=pyverbs; upstream_status=NA; general=;
 Change-Id=Ie16445050f49e792a24af7a9f3d3711955061e1a; subject=Update metadata; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I50af08ed83427f179e5f0d0bb3091905a7d8404e; subject=Update version in suse spec; feature=ofed_scripts; upstream_status=ignore; general=;
