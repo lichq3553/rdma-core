@@ -109,12 +109,16 @@ override_dh_installinit:
 
 override_dh_installsystemd:
 	dh_installsystemd -pibacm --no-start ibacm.service
-	dh_installsystemd -psrptools --no-start
+	dh_installsystemd -psrptools --no-start --no-enable
 	dh_installsystemd --remaining-packages
 
 override_dh_systemd_start:
 	dh_systemd_start -psrptools --no-start
 	dh_systemd_start --remaining-packages
+
+override_dh_systemd_enable:
+	dh_systemd_enable -psrptools --no-enable
+	dh_systemd_enable --remaining-packages
 
 override_dh_compress:
 	dh_compress -X .py
