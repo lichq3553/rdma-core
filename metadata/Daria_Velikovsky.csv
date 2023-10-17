@@ -1,0 +1,2 @@
+sep=;
+Change-Id=I560d615f4d8f329b0de6baccda74d213e57d855c; subject=pyverbs: Extend WQ to enable creation with CQEX; feature=pyverbs; upstream_status=in_progress; general=;
