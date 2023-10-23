@@ -1,3 +1,4 @@
 sep=;
 Change-Id=Ic0a6a5d17ea57c569cec3da0cab711a5d4574760; subject=mlx5: DR, Add merged_eswitch capability field; feature=sw_steering; upstream_status=in_progress; general=;
 Change-Id=I01c81f86f5d2a72e18996229d9165e0a1bb4e751; subject=mlx5: DR, Allow multiple destination action to vport on a different vhca; feature=sw_steering; upstream_status=in_progress; general=;
+Change-Id=Iba7d4660f6f4e3e40b293ba3d94fc0c876842bef; subject=mlx5: DR, Add support for modify ipv6 traffic class action; feature=sw_steering; upstream_status=in_progress; general=;
