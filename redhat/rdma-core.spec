@@ -206,6 +206,10 @@ Summary: InfiniBand Diagnostic Tools
 Provides: perl(IBswcountlimits)
 Provides: libibmad = %{version}-%{release}
 Obsoletes: libibmad < %{version}-%{release}
+Provides: libibmad5 = %{version}-%{release}
+Obsoletes: libibmad5 < %{version}-%{release}
+Provides: libibnetdisc5 = %{version}-%{release}
+Obsoletes: libibnetdisc5 < %{version}-%{release}
 Obsoletes: openib-diags < 1.3
 
 %description -n infiniband-diags
@@ -231,6 +235,8 @@ Provides: libcxgb4 = %{version}-%{release}
 Obsoletes: libcxgb4 < %{version}-%{release}
 Provides: libefa = %{version}-%{release}
 Obsoletes: libefa < %{version}-%{release}
+Provides: libefa1 = %{version}-%{release}
+Obsoletes: libefa1 < %{version}-%{release}
 Provides: liberdma = %{version}-%{release}
 Obsoletes: liberdma < %{version}-%{release}
 Provides: libhfi1 = %{version}-%{release}
@@ -243,6 +249,10 @@ Provides: libmana = %{version}-%{release}
 Obsoletes: libmana < %{version}-%{release}
 Provides: libmlx4 = %{version}-%{release}
 Obsoletes: libmlx4 < %{version}-%{release}
+Provides: libmlx4-1 = %{version}-%{release}
+Obsoletes: libmlx4-1 < %{version}-%{release}
+Provides: libmlx5-1 = %{version}-%{release}
+Obsoletes: libmlx5-1 < %{version}-%{release}
 %ifnarch s390x s390
 Provides: libmlx5 = %{version}-%{release}
 Obsoletes: libmlx5 < %{version}-%{release}
@@ -253,6 +263,8 @@ Provides: libocrdma = %{version}-%{release}
 Obsoletes: libocrdma < %{version}-%{release}
 Provides: librxe = %{version}-%{release}
 Obsoletes: librxe < %{version}-%{release}
+Provides: libibverbs1 = %{version}-%{release}
+Obsoletes: libibverbs1 < %{version}-%{release}
 
 %description -n libibverbs
 libibverbs is a library that allows userspace processes to use RDMA
@@ -299,6 +311,8 @@ library knows how to talk directly to the ibacm daemon to retrieve data.
 
 %package -n libibumad
 Summary: OpenFabrics Alliance InfiniBand umad (userspace management datagram) library
+Provides: libibumad3 = %{version}-%{release}
+Obsoletes: libibumad3 < %{version}-%{release}
 
 %description -n libibumad
 libibumad provides the userspace management datagram (umad) library
@@ -309,6 +323,10 @@ are used by the IB diagnostic and management tools, including OpenSM.
 Summary: Userspace RDMA Connection Manager
 Group: System Environment/Libraries
 Requires: libibverbs%{?_isa} = %{version}-%{release}
+Provides: librdmacm1 = %{version}-%{release}
+Obsoletes: librdmacm1 < %{version}-%{release}
+Provides: rsocket = %{version}-%{release}
+Obsoletes: rsocket < %{version}-%{release}
 
 %description -n librdmacm
 librdmacm provides a userspace RDMA Communication Management API.
