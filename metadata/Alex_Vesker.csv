@@ -1,0 +1,3 @@
+sep=;
+Change-Id=I18a0bab61cf5b3e9fb6ddb9bfd0ea23847aa3c35; subject=mlx5: DR, Rebase new support for ConnectX6Dx; feature=sw_steering; upstream_status=in_progress; general=;
+Change-Id=I2e72821dd32c9241f492b4ef0419d2fafdeaa526; subject=mlx5: Add devx query IB port; feature=sw_steering; upstream_status=NA; general=;

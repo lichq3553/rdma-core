@@ -1,0 +1,5 @@
+sep=;
+Change-Id=I3cd6ac41aaa94f7600862c331cb94998e91ccffd; subject=Add ip->gid only offload; feature=sw_steering; upstream_status=in_progress; general=;
+Change-Id=I981358418c825d9d191a3ed4a4b3f0e242206495; subject=Fix invalidation of a path record; feature=sw_steering; upstream_status=in_progress; general=;
+Change-Id=I08d430950d9a5c0f25be4ffc054154daf954628a; subject=Update port info on reregister event; feature=sw_steering; upstream_status=in_progress; general=;
+Change-Id=I1d8f5603d252d5c223bf040f238a057714e72ceb; subject=mlx5: Call legacy devx query port API; feature=sw_steering; upstream_status=NA; general=;
