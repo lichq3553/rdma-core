@@ -1051,14 +1051,6 @@ bool dr_send_allow_fl(struct dr_devx_caps *caps)
 		 caps->roce_caps.fl_rc_qp_when_roce_disabled));
 }
 
-static int dr_send_get_qp_ts_format(struct dr_devx_caps *caps)
-{
-	/* Set the default TS format in case TS format is supported */
-	return !caps->roce_caps.qp_ts_format ?
-		MLX5_QPC_TIMESTAMP_FORMAT_FREE_RUNNING :
-		MLX5_QPC_TIMESTAMP_FORMAT_DEFAULT;
-}
-
 static int dr_prepare_qp_to_rts(struct mlx5dv_dr_domain *dmn,
 				struct dr_qp *dr_qp)
 {
@@ -1189,7 +1181,7 @@ static int dr_send_ring_alloc_one(struct mlx5dv_dr_domain *dmn,
 	init_attr.cap.max_send_sge	= 1;
 	init_attr.cap.max_recv_sge	= 1;
 	init_attr.cap.max_inline_data	= DR_STE_SIZE;
-	init_attr.qp_ts_format		= dr_send_get_qp_ts_format(&dmn->info.caps);
+	init_attr.qp_ts_format		= MLX5_QPC_TIMESTAMP_FORMAT_DEFAULT;
 
 	/* Isolated VL is applicable only if force LB is supported */
 	if (dr_send_allow_fl(&dmn->info.caps))

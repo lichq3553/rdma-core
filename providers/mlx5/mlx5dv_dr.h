@@ -918,7 +918,6 @@ struct dr_devx_roce_cap {
 	bool roce_en;
 	bool fl_rc_qp_when_roce_disabled;
 	bool fl_rc_qp_when_roce_enabled;
-	uint8_t qp_ts_format;
 };
 
 struct dr_vports_table {
