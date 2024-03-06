@@ -61,7 +61,7 @@ BuildRequires: valgrind-devel
 BuildRequires: systemd
 %endif
 BuildRequires: systemd-devel
-%if 0%{?fedora} >= 32 || 0%{?rhel} >= 8
+%if (0%{?fedora} >= 32 || 0%{?rhel} >= 8) && 0%{?uos} == 0
 %define with_pyverbs %{?_with_pyverbs: 1} %{?!_with_pyverbs: %{?!_without_pyverbs: 1} %{?_without_pyverbs: 0}}
 %else
 %define with_pyverbs %{?_with_pyverbs: 1} %{?!_with_pyverbs: 0}
