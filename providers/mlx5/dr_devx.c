@@ -472,6 +472,8 @@ int dr_devx_query_device(struct ibv_context *ctx, struct dr_devx_caps *caps)
 					      capability.roce_caps.fl_rc_qp_when_roce_disabled);
 		caps->roce_caps.fl_rc_qp_when_roce_enabled = DEVX_GET(query_hca_cap_out, out,
 					      capability.roce_caps.fl_rc_qp_when_roce_enabled);
+		caps->roce_caps.qp_ts_format = DEVX_GET(query_hca_cap_out, out,
+					      capability.roce_caps.qp_ts_format);
 	}
 
 	return 0;
