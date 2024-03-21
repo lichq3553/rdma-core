@@ -12,11 +12,7 @@ depends() {
 
 install() {
 	inst /etc/rdma/mlx4.conf
-	inst /etc/rdma/modules/infiniband.conf
-	inst /etc/rdma/modules/iwarp.conf
-	inst /etc/rdma/modules/opa.conf
 	inst /etc/rdma/modules/rdma.conf
-	inst /etc/rdma/modules/roce.conf
 	inst /usr/libexec/mlx4-setup.sh
 	inst /usr/lib/modprobe.d/libmlx4.conf
 	inst_multiple lspci setpci awk sleep
