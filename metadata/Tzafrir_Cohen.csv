@@ -16,3 +16,4 @@ Change-Id=Ieeb77abea5bef63f70b1e38966cc4b4b9c82c858; subject=deb: Disable buildi
 Change-Id=Ie8a831023eea8282966e68cc32e6773b7ccef5de; subject=spec: Add conflict of ibacm with old rdma-core; feature=ofed_scripts; upstream_status=ignore; general=;
 Change-Id=I47b59ac8ab60deb54dd8e209e39d0741cf045b97; subject=spec: Provides / Obsoletes for new SLES15 packages; feature=ofed_scripts; upstream_status=ignore; general=;
 Change-Id=I799d1795b9a5c88a985400989ab032302817d74e; subject=Remove unused conf files from dracut module; feature=ofed_scripts; upstream_status=NA; general=;
+Change-Id=Ib8db4392b80be38a6f9e0f9a6802c8fdc6fff49b; subject=Do build mlx4 and efa providers; feature=ofed_scripts; upstream_status=NA; general=;

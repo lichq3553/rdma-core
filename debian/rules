@@ -86,6 +86,12 @@ endif
 	mkdir installed_docs
 	mv debian/tmp/usr/share/doc/rdma-core/* installed_docs/
 	rm -rf debian/tmp/usr/share/doc
+	rm -f \
+		debian/tmp/etc/libibverbs.d/efa.driver \
+		debian/tmp/etc/libibverbs.d/mlx4.driver \
+		debian/tmp/usr/lib/*/libibverbs/libefa-rdmav*.so \
+		debian/tmp/usr/lib/*/libibverbs/libmlx4-rdmav*.so \
+		#
 
 # The following files are not used on Debian (we ship our own sysvinit script)
 INST_EXCLUDE := "etc/init.d/srpd" \

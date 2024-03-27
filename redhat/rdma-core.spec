@@ -467,6 +467,11 @@ rm -rf %{buildroot}/%{_initrddir}/
 rm -f %{buildroot}/%{_sbindir}/srp_daemon.sh
 %endif
 
+rm -f %{buildroot}%{_sysconfdir}/libibverbs.d/efa.driver
+rm -f %{buildroot}%{_sysconfdir}/libibverbs.d/mlx4.driver
+rm -f %{buildroot}%{_libdir}/libibverbs/libefa-rdmav*.so
+rm -f %{buildroot}%{_libdir}/libibverbs/libmlx4-rdmav*.so
+
 %post -n rdma-core
 if [ -x /sbin/udevadm ]; then
 /sbin/udevadm trigger --subsystem-match=infiniband --action=change || true
@@ -680,9 +685,11 @@ fi
 %{_libdir}/libibverbs*.so.*
 %{_libdir}/libibverbs/*.so
 %ifnarch s390x s390
+%{_libdir}/libefa.so.*
+%{_libdir}/libmlx4.so.*
 %{_libdir}/libmlx5.so.*
 %endif
-%config(noreplace) %{_sysconfdir}/libibverbs.d/*.driver
+%config(noreplace) %{_sysconfdir}/libibverbs.d/mlx5.driver
 %doc installed_docs/libibverbs.md
 
 %files -n libibverbs-utils
