@@ -13,3 +13,4 @@ Change-Id=I16e4881a994c1fb6379f48a0fe64397b2c56d4f4; subject=tests: Remove Efa r
 Change-Id=Ie16445050f49e792a24af7a9f3d3711955061e1a; subject=Update metadata; feature=ofed_scripts; upstream_status=ignore; general=;
 Change-Id=I50af08ed83427f179e5f0d0bb3091905a7d8404e; subject=Update version in suse spec; feature=ofed_scripts; upstream_status=ignore; general=;
 Change-Id=Ib245b50fa35c316db1500b7e4a37c43159976edd; subject=rdma-core.spec: Don't treat uos as rhel8 for defining pyverbs support; feature=ofed_scripts; upstream_status=ignore; general=;
+Change-Id=I8b95e26f9951446a2bc397dced6a8508cd0dcfd8; subject=Improve python searching logic in buildscripts.; feature=ofed_scripts; upstream_status=ignore; general=;
