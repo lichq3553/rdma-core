@@ -1,3 +1,5 @@
 sep=;
 Change-Id=I16e4881a994c1fb6379f48a0fe64397b2c56d4f4; subject=tests: Remove Efa related code from utils.py; feature=pyverbs; upstream_status=NA; general=;
 Change-Id=I95a52594669e84687d8b95226baa830b11e00221; subject=tests: Fix expected value after test_and_set atomic op; feature=pyverbs; upstream_status=in_progress; general=;
+Change-Id=If10311078131f3978d3d3e4ff7d7ce7f208ca28f; subject=tests: Cover ODP over DevX; feature=pyverbs; upstream_status=in_progress; general=;
+Change-Id=Ia7f6659e8387944f4ab4d5db79931d332292e3ed; subject=tests: Add test ODP with indirect mkey; feature=pyverbs; upstream_status=in_progress; general=;
