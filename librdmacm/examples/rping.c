@@ -66,7 +66,7 @@ static int debug = 0;
  * These states are used to signal events between the completion handler
  * and the main client or server thread.
  *
- * Once CONNECTED, they cycle through RDMA_READ_ADV, RDMA_WRITE_ADV, 
+ * Once CONNECTED, they cycle through RDMA_READ_ADV, RDMA_WRITE_ADV,
  * and RDMA_WRITE_COMPLETE for each ping.
  */
 enum test_state {
@@ -513,7 +513,7 @@ static int rping_setup_buffers(struct rping_cb *cb)
 		}
 
 		cb->start_mr = ibv_reg_mr(cb->pd, cb->start_buf, cb->size,
-					  IBV_ACCESS_LOCAL_WRITE | 
+					  IBV_ACCESS_LOCAL_WRITE |
 					  IBV_ACCESS_REMOTE_READ |
 					  IBV_ACCESS_REMOTE_WRITE);
 		if (!cb->start_mr) {
@@ -686,10 +686,10 @@ static void *cq_thread(void *arg)
 	struct ibv_cq *ev_cq;
 	void *ev_ctx;
 	int ret;
-	
+
 	DEBUG_LOG("cq_thread started.\n");
 
-	while (1) {	
+	while (1) {
 		pthread_testcancel();
 
 		ret = ibv_get_cq_event(cb->channel, &ev_cq, &ev_ctx);
@@ -1148,7 +1148,7 @@ static int rping_bind_client(struct rping_cb *cb)
 	else
 		((struct sockaddr_in6 *) &cb->sin)->sin6_port = cb->port;
 
-	if (cb->ssource.ss_family) 
+	if (cb->ssource.ss_family)
 		ret = rdma_resolve_addr(cb->cm_id, (struct sockaddr *) &cb->ssource,
 					(struct sockaddr *) &cb->sin, 2000);
 	else
@@ -1245,16 +1245,16 @@ static int get_addr(char *dst, struct sockaddr *addr)
 		memcpy(addr, res->ai_addr, sizeof(struct sockaddr_in6));
 	else
 		ret = -1;
-	
+
 	freeaddrinfo(res);
 	return ret;
 }
 
 static void usage(const char *name)
 {
-	printf("%s -s [-vVd] [-S size] [-C count] [-a addr] [-p port]\n", 
+	printf("%s -s [-vVd] [-S size] [-C count] [-a addr] [-p port]\n",
 	       basename(name));
-	printf("%s -c [-vVd] [-S size] [-C count] [-I addr] -a addr [-p port]\n", 
+	printf("%s -c [-vVd] [-S size] [-C count] [-I addr] -a addr [-p port]\n",
 	       basename(name));
 	printf("\t-c\t\tclient side\n");
 	printf("\t-I\t\tSource address to bind to for client.\n");
