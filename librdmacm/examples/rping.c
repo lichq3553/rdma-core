@@ -158,6 +158,33 @@ struct rping_cb {
 	struct rdma_cm_id *child_cm_id;	/* connection on server side */
 };
 
+#if 0
+struct ece_fields_t {   /* Big Endian */
+	uint32          version:4;
+	uint32          reserved:19;
+	uint32          prog_cc_algo:8;
+	uint32          selective_repeat:1;
+};
+#else
+struct ece_fields_t {   /* little Endian */
+	uint32_t          selective_repeat:1;
+	uint32_t          prog_cc_algo:8;
+	uint32_t          reserved:19;
+	uint32_t          version:4;
+};
+#endif
+
+static char* dump_ece(struct ibv_ece *ece)
+{
+	struct ece_fields_t *ef;
+	static char ece_str[512];
+
+	ef = (struct ece_fields_t *)(&(ece->options));
+	snprintf(ece_str, 512, "ECE: vendor_id(0x%x), ece_fields_t(0x%x) {version(%u), prog_cc_algo(0x%x), selective_repeat(%u)}",
+			ece->vendor_id, ece->options, ef->version, ef->prog_cc_algo, ef->selective_repeat);
+	return ece_str;
+}
+
 static int rping_cma_event_handler(struct rdma_cm_id *cma_id,
 				    struct rdma_cm_event *event)
 {
@@ -725,10 +752,20 @@ static void rping_format_send(struct rping_cb *cb, char *buf, struct ibv_mr *mr)
 		  be64toh(info->buf), be32toh(info->rkey), be32toh(info->size));
 }
 
+
 static int rping_test_server(struct rping_cb *cb)
 {
 	struct ibv_send_wr *bad_wr;
 	int ret;
+
+	struct ibv_ece ece = {};
+
+	ret = ibv_query_ece(cb->qp, &ece);
+	if (ret && ret != EOPNOTSUPP) {
+		fprintf(stdout, "LICQ: failed to get ece\n");
+		return ret;
+	}
+	fprintf(stdout, "\n>>>> rping_test_server ece(%s)\n\n", dump_ece(&ece));
 
 	while (1) {
 		/* Wait for client's Start STAG/TO/Len */
@@ -1034,11 +1071,35 @@ err1:
 	return ret;
 }
 
+
+
 static int rping_test_client(struct rping_cb *cb)
 {
 	int ping, start, cc, i, ret = 0;
 	struct ibv_send_wr *bad_wr;
 	unsigned char c;
+	struct ibv_ece ece = {};
+
+	/*
+	 * server: ./build/bin/rping -s -a 21.7.156.17 -p 2233 -C 2 -d
+	 *
+	 * client: ./build/bin/rping -c -I 21.7.156.17  -a 21.7.158.36 -p 2233 -C 2 -d
+	 */
+
+	ret = ibv_query_ece(cb->qp, &ece);
+	if (ret && ret != EOPNOTSUPP) {
+		fprintf(stdout, "LICQ: failed to get ece\n");
+		return ret;
+	}
+	fprintf(stdout, "\n>>>> rping_test_client ece(%s)\n\n", dump_ece(&ece));
+
+	cb->cm_id->qp = NULL;
+	ret = rdma_get_remote_ece(cb->cm_id, &ece);
+	if (ret && ret != EOPNOTSUPP) {
+		fprintf(stdout, "LICQ: failed to get ece, cb->cm_id->qp %p \n", cb->cm_id->qp);
+		return ret;
+	}
+	fprintf(stdout, "\n>>>> rping_test_client, rdma_get_remote_ece ece(%s)\n\n", dump_ece(&ece));
 
 	start = 65;
 	for (ping = 0; !cb->count || ping < cb->count; ping++) {
@@ -1102,6 +1163,7 @@ static int rping_test_client(struct rping_cb *cb)
 
 	return (cb->state == DISCONNECTED) ? 0 : ret;
 }
+
 
 static int rping_connect_client(struct rping_cb *cb)
 {
