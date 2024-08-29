@@ -45,9 +45,11 @@
 #include <inttypes.h>
 #include <rdma/rdma_cma.h>
 #include "common.h"
+ #include <fcntl.h>
 
 static int debug = 0;
 #define DEBUG_LOG if (debug) printf
+#define MAP_LENGTH (10*1024*1024)
 
 /*
  * rping "ping/pong" loop:
@@ -66,7 +68,7 @@ static int debug = 0;
  * These states are used to signal events between the completion handler
  * and the main client or server thread.
  *
- * Once CONNECTED, they cycle through RDMA_READ_ADV, RDMA_WRITE_ADV, 
+ * Once CONNECTED, they cycle through RDMA_READ_ADV, RDMA_WRITE_ADV,
  * and RDMA_WRITE_COMPLETE for each ping.
  */
 enum test_state {
@@ -487,22 +489,31 @@ static int rping_setup_buffers(struct rping_cb *cb)
 		goto err1;
 	}
 
-	cb->rdma_buf = malloc(cb->size);
+	// fprintf(1, "LICQ \n");
+	fprintf(stderr, "LICQ: test #1\n");
+	// cb->rdma_buf = malloc(cb->size);
+	// cb->rdma_buf = mmap(NULL, cb->size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+	cb->rdma_buf = mmap(NULL, cb->size, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+
+	// int fd;
+	// fd = open("/mnt/huge/hugepage1", O_CREAT|O_RDWR);
+	// cb->rdma_buf = mmap(0, MAP_LENGTH, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+
+	fprintf(stderr, "LICQ: test #2, cb->rdma_buf(%p), len(%d)\n", cb->rdma_buf, 128);
 	if (!cb->rdma_buf) {
 		fprintf(stderr, "rdma_buf malloc failed\n");
 		ret = -ENOMEM;
 		goto err2;
 	}
 
-	cb->rdma_mr = ibv_reg_mr(cb->pd, cb->rdma_buf, cb->size,
-				 IBV_ACCESS_LOCAL_WRITE |
-				 IBV_ACCESS_REMOTE_READ |
-				 IBV_ACCESS_REMOTE_WRITE);
+	cb->rdma_mr = ibv_reg_mr(cb->pd, cb->rdma_buf, 128, IBV_ACCESS_REMOTE_READ);
 	if (!cb->rdma_mr) {
-		fprintf(stderr, "rdma_buf reg_mr failed\n");
+		fprintf(stderr, "rdma_buf reg_mr failed, errno(%d)\n", errno);
 		ret = errno;
 		goto err3;
 	}
+
+	fprintf(stderr, "LICQ: test #3\n");
 
 	if (!cb->server) {
 		cb->start_buf = malloc(cb->size);
@@ -513,7 +524,7 @@ static int rping_setup_buffers(struct rping_cb *cb)
 		}
 
 		cb->start_mr = ibv_reg_mr(cb->pd, cb->start_buf, cb->size,
-					  IBV_ACCESS_LOCAL_WRITE | 
+					  IBV_ACCESS_LOCAL_WRITE |
 					  IBV_ACCESS_REMOTE_READ |
 					  IBV_ACCESS_REMOTE_WRITE);
 		if (!cb->start_mr) {
@@ -686,10 +697,10 @@ static void *cq_thread(void *arg)
 	struct ibv_cq *ev_cq;
 	void *ev_ctx;
 	int ret;
-	
+
 	DEBUG_LOG("cq_thread started.\n");
 
-	while (1) {	
+	while (1) {
 		pthread_testcancel();
 
 		ret = ibv_get_cq_event(cb->channel, &ev_cq, &ev_ctx);
@@ -1148,7 +1159,7 @@ static int rping_bind_client(struct rping_cb *cb)
 	else
 		((struct sockaddr_in6 *) &cb->sin)->sin6_port = cb->port;
 
-	if (cb->ssource.ss_family) 
+	if (cb->ssource.ss_family)
 		ret = rdma_resolve_addr(cb->cm_id, (struct sockaddr *) &cb->ssource,
 					(struct sockaddr *) &cb->sin, 2000);
 	else
@@ -1245,16 +1256,16 @@ static int get_addr(char *dst, struct sockaddr *addr)
 		memcpy(addr, res->ai_addr, sizeof(struct sockaddr_in6));
 	else
 		ret = -1;
-	
+
 	freeaddrinfo(res);
 	return ret;
 }
 
 static void usage(const char *name)
 {
-	printf("%s -s [-vVd] [-S size] [-C count] [-a addr] [-p port]\n", 
+	printf("%s -s [-vVd] [-S size] [-C count] [-a addr] [-p port]\n",
 	       basename(name));
-	printf("%s -c [-vVd] [-S size] [-C count] [-I addr] -a addr [-p port]\n", 
+	printf("%s -c [-vVd] [-S size] [-C count] [-I addr] -a addr [-p port]\n",
 	       basename(name));
 	printf("\t-c\t\tclient side\n");
 	printf("\t-I\t\tSource address to bind to for client.\n");

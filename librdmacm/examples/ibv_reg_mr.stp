@@ -1,0 +1,120 @@
+
+global test_mr_reg=0
+
+probe module("ib_core").function("ib_umem_get").return
+{
+	printf(" ib_umem_get retval \n")
+}
+
+probe module("ib_uverbs").function("ib_uverbs_reg_mr").return
+{
+	#printf(" <<< ib_uverbs_reg_mr return %d\n", $return)
+}
+
+probe module("ib_uverbs").function("ib_uverbs_reg_mr").call
+{
+	#printf(" >>> ib_uverbs_reg_mr call \n")
+}
+
+probe module("mlx5_ib").function("mlx5_ib_reg_user_mr").call
+{
+	test_mr_reg=1;
+	printf(">>> mlx5_ib_reg_user_mr start(0x%x), len(%d)\n", $start, $length)
+}
+
+probe module("mlx5_ib").function("mlx5_ib_reg_user_mr").return
+{
+	test_mr_reg=0;
+	printf("<<< mlx5_ib_reg_user_mr, return(%d)\n", $return)
+}
+
+
+probe module("ib_core").function("ib_umem_get_peer").return
+{
+	printf(" ib_umem_get_peer retval %d\n", $return)
+}
+
+
+probe module("ib_core").function("__ib_umem_get").return
+{
+	printf(" __ib_umem_get retval %d\n", $return)
+}
+
+
+probe module("ib_uverbs").function("alloc_begin_idr_uobject").return
+{
+	printf(" alloc_begin_idr_uobject retval %d\n", $return)
+}
+
+
+probe kernel.function("pin_user_pages_fast").call
+{
+	printf(" pin_user_pages_fast start(%p), len(%d)\n", $start, $nr_pages)
+}
+
+probe kernel.function("pin_user_pages_fast").return
+{
+	printf(" pin_user_pages_fast return %d, %p\n", $return, pointer_arg(1))
+}
+
+probe kernel.function("internal_get_user_pages_fast").call
+{
+	if (test_mr_reg) {
+		printf(" internal_get_user_pages_fast start(%p), nr_pages(%ld), gup_flags(0x%x)\n", $start, $nr_pages, $gup_flags);
+	}
+}
+
+probe kernel.function("lockless_pages_from_mm").call
+{
+	#printf(" lockless_pages_from_mm start(%p), end(%p), gup_flags(0x%x)\n", $start, $end, $gup_flags)
+}
+
+# probe kernel.function("__get_user_pages_locked")
+probe kernel.function("__get_user_pages_locked")
+{
+	if (test_mr_reg) {
+		printf(" __get_user_pages_locked start(%p), nr_pages(%ld), flags(0x%x)\n", $start, $nr_pages, $flags);
+	}
+}
+
+probe kernel.function("__get_user_pages").call
+{
+	if (test_mr_reg) {
+		printf(" __get_user_pages start(%p), nr_pages(%ld), gup_flags(0x%x)\n", $start, $nr_pages, $gup_flags);
+	}
+}
+
+probe kernel.function("__get_user_pages").return
+{
+	if (test_mr_reg) {
+		printf(" __get_user_pages, return(%d)\n", $return);
+	}
+}
+
+probe kernel.function("check_vma_flags").call
+{
+	if (test_mr_reg) {
+		printf(" check_vma_flags vm_flags(0x%x), foll_flags(0x%x)\n", $vma->vm_flags, $gup_flags);
+		printf(" check_vma_flags vm_ops(0x%x), foll_flags(0x%x)\n", $vma->vm_ops, $gup_flags);
+	}
+}
+
+probe kernel.function("check_vma_flags").return
+{
+	if (test_mr_reg) {
+		printf(" check_vma_flags, return(%d)\n", $return);
+	}
+}
+
+probe module("ib_core").function("*").return
+{
+	#printf(" >>> %s \n", probefunc())
+}
+
+
+
+probe module("mlx5_ib").function("create_real_mr").return
+{
+	#printf(" create_real_mr retval %d\n", $return)
+}
+
