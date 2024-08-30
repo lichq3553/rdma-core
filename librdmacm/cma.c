@@ -148,6 +148,33 @@ int af_ib_support;
 static struct index_map ucma_idm;
 static fastlock_t idm_lock;
 
+#if 0
+struct ece_fields_t {   /* Big Endian */
+	uint32          version:4;
+	uint32          reserved:19;
+	uint32          prog_cc_algo:8;
+	uint32          selective_repeat:1;
+};
+#else
+struct ece_fields_t {   /* little Endian */
+	uint32_t          selective_repeat:1;
+	uint32_t          prog_cc_algo:8;
+	uint32_t          reserved:19;
+	uint32_t          version:4;
+};
+#endif
+
+static char* dump_ece(struct ibv_ece *ece)
+{
+	struct ece_fields_t *ef;
+	static char ece_str[512];
+
+	ef = (struct ece_fields_t *)(&(ece->options));
+	snprintf(ece_str, 512, "ECE: vendor_id(0x%x), ece_fields_t(0x%x) {version(%u), prog_cc_algo(0x%x), selective_repeat(%u)}",
+			ece->vendor_id, ece->options, ef->version, ef->prog_cc_algo, ef->selective_repeat);
+	return ece_str;
+}
+
 static int check_abi_version_nl_cb(struct nl_msg *msg, void *data)
 {
 	struct nlattr *tb[RDMA_NLDEV_ATTR_MAX];
@@ -1598,6 +1625,7 @@ static int init_ece(struct rdma_cm_id *id, struct ibv_qp *qp)
 		ece.options = id_priv->remote_ece.options;
 	}
 	ret = ibv_set_ece(qp, &ece);
+	fprintf(stdout, "\n>>>> init_ece ret(%d), ece(%s)\n\n", ret, dump_ece(&ece));
 	return (ret && ret != EOPNOTSUPP) ? ERR(ret) : 0;
 }
 
@@ -1615,6 +1643,7 @@ static int set_local_ece(struct rdma_cm_id *id, struct ibv_qp *qp)
 	if (ret && ret != EOPNOTSUPP)
 		return ERR(ret);
 
+	fprintf(stdout, "\n>>>> set_local_ece ret(%d), ece(%s)\n\n", ret, dump_ece(&ece));
 	id_priv->local_ece.options = ece.options;
 	return 0;
 }
@@ -1807,7 +1836,16 @@ int rdma_connect(struct rdma_cm_id *id, struct rdma_conn_param *conn_param)
 	ucma_copy_conn_param_to_kern(id_priv, &cmd.conn_param, conn_param,
 				     qp_num, srq);
 
+	{
+		struct ece_fields_t *ef;
+		ef = (struct ece_fields_t *)&(id_priv->local_ece.options);
+		(void)ef->prog_cc_algo;
+	}
+
 	ucma_copy_ece_param_to_kern_req(id_priv, &cmd.ece);
+
+	fprintf(stdout, "\n>>>> rdma_connnect, cmd ece(%s) \n\n", dump_ece((struct ibv_ece*)&(id_priv->local_ece)));
+
 
 	ret = write(id->channel->fd, &cmd, sizeof cmd);
 	if (ret != sizeof cmd)
@@ -1944,6 +1982,9 @@ int rdma_accept(struct rdma_cm_id *id, struct rdma_conn_param *conn_param)
 	ucma_copy_conn_param_to_kern(id_priv, &cmd.conn_param, conn_param,
 				     qp_num, srq);
 	ucma_copy_ece_param_to_kern_rep(id_priv, &cmd.ece);
+
+	fprintf(stdout, "\n>>>> rdma_accept, srever cmd ece(%s) \n\n", dump_ece((struct ibv_ece*)&(cmd.ece)));
+	// dump_ece((struct ibv_ece*)&id_priv->remote_ece);
 
 	ret = write(id->channel->fd, &cmd, sizeof cmd);
 	if (ret != sizeof cmd) {
@@ -2319,6 +2360,8 @@ static int ucma_process_conn_req(struct cma_event *evt, uint32_t handle,
 	id_priv->remote_ece.vendor_id = ece->vendor_id;
 	id_priv->remote_ece.options = ece->attr_mod;
 
+	fprintf(stdout, "\n>>>> ucma_process_conn_req, server gets client's ece (%s)\n\n", dump_ece((struct ibv_ece*)&id_priv->remote_ece));
+
 	if (evt->id_priv->sync) {
 		ret = rdma_migrate_id(&id_priv->id, NULL);
 		if (ret)
@@ -2391,10 +2434,14 @@ static int ucma_process_conn_resp_ece(struct cma_id_private *id_priv,
 		return ERR(EINVAL);
 	}
 
+	fprintf(stdout, "\n>>>> ucma_process_conn_resp_ece, client gets server's ece(%s) \n\n", dump_ece((struct ibv_ece*)&ibv_ece));
+
 	id_priv->remote_ece.vendor_id = ece->vendor_id;
 	ret = ibv_set_ece(id_priv->id.qp, &ibv_ece);
-	if (ret && ret != EOPNOTSUPP)
+	if (ret && ret != EOPNOTSUPP) {
+		fprintf(stdout, "LICQ failed to do ibv_set_ece\n");
 		return ret;
+	}
 
 	ret = ucma_process_conn_resp(id_priv);
 	if (ret)
@@ -2405,6 +2452,8 @@ static int ucma_process_conn_resp_ece(struct cma_id_private *id_priv,
 		ucma_modify_qp_err(&id_priv->id);
 		return ret;
 	}
+
+	fprintf(stdout, "\n>>>> ucma_process_conn_resp_ece, ibv_query_ece ece(%s) \n\n", dump_ece((struct ibv_ece*)&ibv_ece));
 
 	id_priv->local_ece.options = (ret == EOPNOTSUPP) ? 0 : ibv_ece.options;
 	return 0;
